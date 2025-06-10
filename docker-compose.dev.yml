@@ -1,0 +1,117 @@
+version: '3.8'
+
+# Configuration Docker Compose pour le développement
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  # Base de données PostgreSQL pour le développement
+  postgres:
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: senemedecine_central
+      POSTGRES_USER: senemedecine
+      POSTGRES_PASSWORD: senemedecine123
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    command: postgres -c log_statement=all -c log_destination=stderr
+
+  # Orthanc pour le développement
+  orthanc:
+    ports:
+      - "8042:8042"
+      - "4242:4242"
+    environment:
+      - ORTHANC_USERNAME=orthanc
+      - ORTHANC_PASSWORD=orthanc
+      - VERBOSE_ENABLED=true
+    volumes:
+      - orthanc_dev_data:/var/lib/orthanc/db
+      - ./orthanc/orthanc.json:/etc/orthanc/orthanc.json:ro
+
+  # Backend NestJS en mode développement
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3001:3001"
+      - "9229:9229"  # Port pour le debugging Node.js
+    environment:
+      - NODE_ENV=development
+      - DEBUG=true
+      - HOT_RELOAD=true
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=senemedecine
+      - DATABASE_PASSWORD=senemedecine123
+      - DATABASE_NAME=senemedecine_central
+      - JWT_SECRET=dev-jwt-secret-not-for-production
+      - ORTHANC_URL=http://orthanc:8042
+      - ORTHANC_USERNAME=orthanc
+      - ORTHANC_PASSWORD=orthanc
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - ./backend/uploads:/app/uploads
+      - ./backend/logs:/app/logs
+    command: npm run start:dev
+    depends_on:
+      - postgres
+      - orthanc
+
+  # Frontend React en mode développement
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:3001/api/v1
+      - REACT_APP_ORTHANC_URL=http://localhost:8042
+      - CHOKIDAR_USEPOLLING=true
+      - FAST_REFRESH=true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm start
+    depends_on:
+      - backend
+
+  # Redis pour le développement (optionnel)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+    command: redis-server --appendonly yes
+
+  # Adminer pour la gestion de base de données
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    environment:
+      - ADMINER_DEFAULT_SERVER=postgres
+    depends_on:
+      - postgres
+
+  # MailHog pour tester les emails en développement
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+
+volumes:
+  postgres_dev_data:
+  orthanc_dev_data:
+  redis_dev_data:
+
+networks:
+  default:
+    name: senemedecine-dev-network
+

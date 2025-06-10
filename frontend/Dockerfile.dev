@@ -1,0 +1,30 @@
+# Dockerfile pour le développement du frontend React
+FROM node:18-alpine
+
+# Installer les outils de développement
+RUN apk add --no-cache git curl
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers de dépendances
+COPY package*.json ./
+COPY yarn.lock* ./
+
+# Installer toutes les dépendances (dev incluses)
+RUN npm ci
+
+# Copier le code source
+COPY . .
+
+# Exposer le port
+EXPOSE 3000
+
+# Variables d'environnement pour le développement
+ENV NODE_ENV=development
+ENV CHOKIDAR_USEPOLLING=true
+ENV FAST_REFRESH=true
+
+# Commande par défaut
+CMD ["npm", "start"]
+

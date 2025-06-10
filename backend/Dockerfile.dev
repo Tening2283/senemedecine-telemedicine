@@ -1,0 +1,32 @@
+# Dockerfile pour le développement du backend NestJS
+FROM node:18-alpine
+
+# Installer les outils de développement
+RUN apk add --no-cache git curl
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers de dépendances
+COPY package*.json ./
+COPY yarn.lock* ./
+
+# Installer toutes les dépendances (dev incluses)
+RUN npm ci
+
+# Copier le code source
+COPY . .
+
+# Créer les répertoires nécessaires
+RUN mkdir -p uploads logs
+
+# Exposer les ports
+EXPOSE 3001 9229
+
+# Variables d'environnement pour le développement
+ENV NODE_ENV=development
+ENV PORT=3001
+
+# Commande par défaut (peut être surchargée)
+CMD ["npm", "run", "start:dev"]
+

@@ -1,0 +1,26 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.0
+
+# Ignorer certaines vulnérabilités (à utiliser avec précaution)
+ignore:
+  # Exemple: ignorer une vulnérabilité spécifique pour une durée limitée
+  # SNYK-JS-LODASH-567746:
+  #   - '*':
+  #       reason: 'Pas de correctif disponible, risque faible'
+  #       expires: '2024-12-31T23:59:59.999Z'
+
+# Patches pour corriger automatiquement certaines vulnérabilités
+patch: {}
+
+# Exclusions de chemins
+exclude:
+  global:
+    - '**/*.test.js'
+    - '**/*.spec.js'
+    - '**/test/**'
+    - '**/tests/**'
+    - '**/coverage/**'
+    - '**/node_modules/**'
+    - '**/dist/**'
+    - '**/build/**'
+

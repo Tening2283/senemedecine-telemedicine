@@ -1,0 +1,74 @@
+MIT License
+
+Copyright (c) 2024 SeneMedecine Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## Mentions Légales Spécifiques au Domaine Médical
+
+### Avertissement Important
+
+Cette application est destinée à des fins éducatives et de développement. 
+Pour une utilisation en environnement médical réel, veuillez vous assurer de :
+
+1. **Conformité Réglementaire** : Respecter toutes les réglementations locales 
+   et internationales concernant les dispositifs médicaux et la protection des 
+   données de santé.
+
+2. **Validation Médicale** : Faire valider l'application par des professionnels 
+   de santé qualifiés avant toute utilisation clinique.
+
+3. **Sécurité des Données** : Implémenter des mesures de sécurité appropriées 
+   pour protéger les données sensibles des patients.
+
+4. **Responsabilité** : Les développeurs et contributeurs de ce projet ne 
+   peuvent être tenus responsables de l'utilisation de cette application dans 
+   un contexte médical réel.
+
+### Conformité RGPD et Protection des Données
+
+Cette application traite des données de santé sensibles. Les utilisateurs sont 
+responsables de :
+
+- Obtenir les consentements appropriés des patients
+- Implémenter les mesures de sécurité requises par le RGPD
+- Respecter les droits des patients (accès, rectification, effacement)
+- Notifier les autorités compétentes en cas de violation de données
+
+### Contexte Sénégalais
+
+Pour une utilisation au Sénégal, veuillez vous conformer à :
+
+- La loi n° 2008-12 du 25 janvier 2008 sur la protection des données personnelles
+- Les directives du Ministère de la Santé et de l'Action Sociale
+- Les standards de l'Ordre des Médecins du Sénégal
+- Les réglementations de la Commission de Protection des Données Personnelles (CDP)
+
+### Clause de Non-Responsabilité Médicale
+
+Cette application ne remplace pas le jugement médical professionnel. 
+Toute décision médicale doit être prise par des professionnels de santé qualifiés.
+
+---
+
+Pour plus d'informations sur l'utilisation responsable de cette application, 
+consultez la documentation complète dans le répertoire `docs/`.
+

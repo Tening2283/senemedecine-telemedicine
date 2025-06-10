@@ -1,0 +1,209 @@
+# Règles d'alerte pour SeneMedecine
+groups:
+  - name: senemedecine.rules
+    rules:
+      # Alertes de disponibilité
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service {{ $labels.job }} est indisponible"
+          description: "Le service {{ $labels.job }} sur {{ $labels.instance }} est indisponible depuis plus d'1 minute."
+
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Taux d'erreur élevé pour {{ $labels.job }}"
+          description: "Le taux d'erreur 5xx est de {{ $value }} pour {{ $labels.job }} depuis 5 minutes."
+
+      # Alertes de performance
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Temps de réponse élevé pour {{ $labels.job }}"
+          description: "Le temps de réponse P95 est de {{ $value }}s pour {{ $labels.job }}."
+
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Utilisation CPU élevée sur {{ $labels.instance }}"
+          description: "L'utilisation CPU est de {{ $value }}% sur {{ $labels.instance }}."
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Utilisation mémoire élevée sur {{ $labels.instance }}"
+          description: "L'utilisation mémoire est de {{ $value }}% sur {{ $labels.instance }}."
+
+      # Alertes base de données
+      - alert: PostgreSQLDown
+        expr: pg_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PostgreSQL est indisponible"
+          description: "La base de données PostgreSQL sur {{ $labels.instance }} est indisponible."
+
+      - alert: PostgreSQLTooManyConnections
+        expr: sum by (instance) (pg_stat_activity_count) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Trop de connexions PostgreSQL"
+          description: "PostgreSQL a {{ $value }} connexions actives sur {{ $labels.instance }}."
+
+      - alert: PostgreSQLSlowQueries
+        expr: rate(pg_stat_activity_max_tx_duration[5m]) > 60
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Requêtes PostgreSQL lentes"
+          description: "Des requêtes PostgreSQL prennent plus de 60 secondes sur {{ $labels.instance }}."
+
+      # Alertes Redis
+      - alert: RedisDown
+        expr: redis_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Redis est indisponible"
+          description: "Redis sur {{ $labels.instance }} est indisponible."
+
+      - alert: RedisHighMemoryUsage
+        expr: redis_memory_used_bytes / redis_memory_max_bytes * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Utilisation mémoire Redis élevée"
+          description: "Redis utilise {{ $value }}% de sa mémoire allouée sur {{ $labels.instance }}."
+
+      # Alertes Orthanc
+      - alert: OrthancDown
+        expr: up{job="orthanc"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Orthanc DICOM est indisponible"
+          description: "Le serveur Orthanc DICOM est indisponible depuis 2 minutes."
+
+      - alert: OrthancHighDiskUsage
+        expr: orthanc_disk_usage_percent > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Espace disque Orthanc faible"
+          description: "L'espace disque d'Orthanc est utilisé à {{ $value }}%."
+
+      # Alertes spécifiques à l'application
+      - alert: HighLoginFailureRate
+        expr: rate(auth_login_failures_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Taux d'échec de connexion élevé"
+          description: "Le taux d'échec de connexion est de {{ $value }} tentatives/seconde."
+
+      - alert: LowPatientRegistrationRate
+        expr: rate(patients_created_total[1h]) < 0.01
+        for: 30m
+        labels:
+          severity: info
+        annotations:
+          summary: "Faible taux d'enregistrement de patients"
+          description: "Moins de {{ $value }} patients enregistrés par heure dans la dernière heure."
+
+      # Alertes de sécurité
+      - alert: SuspiciousActivity
+        expr: rate(http_requests_total{status="401"}[5m]) > 0.5
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Activité suspecte détectée"
+          description: "Taux élevé de requêtes non autorisées: {{ $value }} requêtes/seconde."
+
+      - alert: TooManyFailedLogins
+        expr: increase(auth_login_failures_total[10m]) > 50
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Trop de tentatives de connexion échouées"
+          description: "{{ $value }} tentatives de connexion échouées dans les 10 dernières minutes."
+
+      # Alertes de capacité
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Espace disque faible sur {{ $labels.instance }}"
+          description: "Il reste moins de 10% d'espace disque sur {{ $labels.mountpoint }} ({{ $labels.instance }})."
+
+      - alert: HighNetworkTraffic
+        expr: rate(node_network_receive_bytes_total[5m]) > 100000000  # 100MB/s
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Trafic réseau élevé sur {{ $labels.instance }}"
+          description: "Trafic réseau entrant de {{ $value }} bytes/seconde sur {{ $labels.device }}."
+
+  # Règles d'agrégation
+  - name: senemedecine.aggregation
+    interval: 30s
+    rules:
+      - record: senemedecine:http_requests:rate5m
+        expr: sum(rate(http_requests_total[5m])) by (job, method, status)
+
+      - record: senemedecine:http_request_duration:p95
+        expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (job, le))
+
+      - record: senemedecine:http_request_duration:p99
+        expr: histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (job, le))
+
+      - record: senemedecine:error_rate
+        expr: sum(rate(http_requests_total{status=~"5.."}[5m])) by (job) / sum(rate(http_requests_total[5m])) by (job)
+
+      - record: senemedecine:availability
+        expr: avg(up) by (job)
+
+  # Règles métier spécifiques
+  - name: senemedecine.business
+    interval: 1m
+    rules:
+      - record: senemedecine:active_users:5m
+        expr: sum(increase(auth_login_success_total[5m]))
+
+      - record: senemedecine:consultations:rate1h
+        expr: sum(rate(consultations_created_total[1h]))
+
+      - record: senemedecine:dicom_studies:rate1h
+        expr: sum(rate(dicom_studies_uploaded_total[1h]))
+
+      - record: senemedecine:appointments:rate1d
+        expr: sum(rate(appointments_created_total[1d]))
+

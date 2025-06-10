@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 Exécution des vérifications pre-push..."
+
+# Exécuter la validation complète
+./scripts/validate.sh quick
+
+echo "✅ Pre-push checks passed!"
+
