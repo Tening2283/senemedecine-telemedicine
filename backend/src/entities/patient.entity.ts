@@ -1,11 +1,4 @@
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  OneToMany,
-  JoinColumn,
-  Index,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn, Index } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { User } from './user.entity';
 import { Hospital } from './hospital.entity';
@@ -127,7 +120,7 @@ export class Patient extends BaseEntity {
   @Column({ type: 'uuid', nullable: true })
   userId: string;
 
-  @ManyToOne(() => User, (user) => user.patientProfiles, {
+  @ManyToOne(() => User, user => user.patientProfiles, {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'userId' })
@@ -136,16 +129,16 @@ export class Patient extends BaseEntity {
   @Column({ type: 'uuid' })
   hospitalId: string;
 
-  @ManyToOne(() => Hospital, (hospital) => hospital.patients, {
+  @ManyToOne(() => Hospital, hospital => hospital.patients, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'hospitalId' })
   hospital: Hospital;
 
-  @OneToMany(() => Consultation, (consultation) => consultation.patient)
+  @OneToMany(() => Consultation, consultation => consultation.patient)
   consultations: Consultation[];
 
-  @OneToMany(() => Appointment, (appointment) => appointment.patient)
+  @OneToMany(() => Appointment, appointment => appointment.patient)
   appointments: Appointment[];
 
   // Propriétés calculées
@@ -158,11 +151,11 @@ export class Patient extends BaseEntity {
     const birthDate = new Date(this.dateOfBirth);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    
+
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
-    
+
     return age;
   }
 
@@ -178,4 +171,3 @@ export class Patient extends BaseEntity {
     return `${this.fullName} (${this.patientNumber})`;
   }
 }
-

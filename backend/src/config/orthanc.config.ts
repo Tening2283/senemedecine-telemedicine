@@ -8,4 +8,3 @@ export const orthancConfig = registerAs('orthanc', () => ({
   maxRetries: parseInt(process.env.ORTHANC_MAX_RETRIES, 10) || 3,
   retryDelay: parseInt(process.env.ORTHANC_RETRY_DELAY, 10) || 1000,
 }));
-

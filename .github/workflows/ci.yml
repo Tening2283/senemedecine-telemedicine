@@ -27,25 +27,23 @@ jobs:
         cache: 'npm'
         
     - name: Install dependencies
-      run: |
-        cd backend && npm ci
-        cd ../frontend && npm ci
+      run: npm ci
         
     - name: Lint backend
-      run: cd backend && npm run lint
+      run: npm run lint --workspace=backend
       
     - name: Lint frontend
-      run: cd frontend && npm run lint
+      run: npm run lint --workspace=frontend
       
     - name: Check formatting
       run: |
-        cd backend && npm run format:check
-        cd ../frontend && npm run format:check
+        npm run format:check --workspace=backend
+        npm run format:check --workspace=frontend
         
     - name: TypeScript compilation
       run: |
-        cd backend && npm run build
-        cd ../frontend && npm run build
+        npm run build --workspace=backend
+        npm run build --workspace=frontend
 
   # Job de tests backend
   test-backend:
@@ -88,10 +86,10 @@ jobs:
         cache: 'npm'
         
     - name: Install backend dependencies
-      run: cd backend && npm ci
+      run: npm ci
       
     - name: Run backend tests
-      run: cd backend && npm run test
+      run: npm run test --workspace=backend
       env:
         DATABASE_HOST: localhost
         DATABASE_PORT: 5432
@@ -103,7 +101,7 @@ jobs:
         JWT_SECRET: test-secret
         
     - name: Run backend e2e tests
-      run: cd backend && npm run test:e2e
+      run: npm run test:e2e --workspace=backend
       env:
         DATABASE_HOST: localhost
         DATABASE_PORT: 5432
@@ -136,10 +134,10 @@ jobs:
         cache: 'npm'
         
     - name: Install frontend dependencies
-      run: cd frontend && npm ci
+      run: npm ci
       
     - name: Run frontend tests
-      run: cd frontend && npm run test -- --coverage --watchAll=false
+      run: npm run test --workspace=frontend -- --coverage --watchAll=false
       
     - name: Upload frontend coverage
       uses: codecov/codecov-action@v3
@@ -163,15 +161,13 @@ jobs:
         cache: 'npm'
         
     - name: Install dependencies
-      run: |
-        cd backend && npm ci
-        cd ../frontend && npm ci
+      run: npm ci
         
     - name: Run security audit backend
-      run: cd backend && npm audit --audit-level moderate
+      run: npm audit --workspace=backend --audit-level moderate
       
     - name: Run security audit frontend
-      run: cd frontend && npm audit --audit-level moderate
+      run: npm audit --workspace=frontend --audit-level moderate
       
     - name: Run Snyk security scan
       uses: snyk/actions/node@master
@@ -289,4 +285,4 @@ jobs:
       run: |
         docker system prune -f
         docker volume prune -f
-
+```

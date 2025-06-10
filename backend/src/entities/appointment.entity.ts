@@ -1,10 +1,4 @@
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  JoinColumn,
-  Index,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { Patient } from './patient.entity';
 import { User } from './user.entity';
@@ -128,7 +122,7 @@ export class Appointment extends BaseEntity {
   @Column({ type: 'uuid' })
   patientId: string;
 
-  @ManyToOne(() => Patient, (patient) => patient.appointments, {
+  @ManyToOne(() => Patient, patient => patient.appointments, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'patientId' })
@@ -137,7 +131,7 @@ export class Appointment extends BaseEntity {
   @Column({ type: 'uuid' })
   doctorId: string;
 
-  @ManyToOne(() => User, (user) => user.appointmentsAsDoctor, {
+  @ManyToOne(() => User, user => user.appointmentsAsDoctor, {
     onDelete: 'RESTRICT',
   })
   @JoinColumn({ name: 'doctorId' })
@@ -146,7 +140,7 @@ export class Appointment extends BaseEntity {
   @Column({ type: 'uuid' })
   hospitalId: string;
 
-  @ManyToOne(() => Hospital, (hospital) => hospital.appointments, {
+  @ManyToOne(() => Hospital, hospital => hospital.appointments, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'hospitalId' })
@@ -155,7 +149,7 @@ export class Appointment extends BaseEntity {
   @Column({ type: 'uuid', nullable: true })
   createdById: string;
 
-  @ManyToOne(() => User, (user) => user.appointmentsCreated, {
+  @ManyToOne(() => User, user => user.appointmentsCreated, {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'createdById' })
@@ -191,7 +185,7 @@ export class Appointment extends BaseEntity {
     const appointmentTime = new Date(this.appointmentDate);
     const timeDiff = appointmentTime.getTime() - now.getTime();
     const minutesDiff = timeDiff / (1000 * 60);
-    
+
     return (
       this.status === AppointmentStatus.CONFIRMED &&
       minutesDiff <= 30 && // Peut s'enregistrer 30 minutes avant
@@ -212,4 +206,3 @@ export class Appointment extends BaseEntity {
     return statusMap[this.status] || this.status;
   }
 }
-

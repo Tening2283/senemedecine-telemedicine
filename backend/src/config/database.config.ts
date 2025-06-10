@@ -30,4 +30,3 @@ const config: DataSourceOptions = {
 };
 
 export default new DataSource(config);
-

@@ -31,7 +31,7 @@ export const HospitalProvider: React.FC<HospitalProviderProps> = ({ children }) 
       // TODO: Implémenter l'appel API pour charger les hôpitaux
       // const response = await hospitalService.getHospitals();
       // setHospitals(response.data);
-      
+
       // Données de test
       const testHospitals: Hospital[] = [
         {
@@ -66,11 +66,7 @@ export const HospitalProvider: React.FC<HospitalProviderProps> = ({ children }) 
     loadHospitals,
   };
 
-  return (
-    <HospitalContext.Provider value={value}>
-      {children}
-    </HospitalContext.Provider>
-  );
+  return <HospitalContext.Provider value={value}>{children}</HospitalContext.Provider>;
 };
 
 export const useHospital = (): HospitalContextType => {
@@ -80,4 +76,3 @@ export const useHospital = (): HospitalContextType => {
   }
   return context;
 };
-

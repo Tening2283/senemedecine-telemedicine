@@ -35,10 +35,7 @@ interface ProtectedRouteProps {
   allowedRoles?: UserRole[];
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
-  allowedRoles 
-}) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowedRoles }) => {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
@@ -144,7 +141,7 @@ const App: React.FC = () => {
                   <Route
                     path="/patients"
                     element={
-                      <ProtectedRoute 
+                      <ProtectedRoute
                         allowedRoles={[UserRole.ADMIN, UserRole.MEDECIN, UserRole.SECRETAIRE]}
                       >
                         <PatientsPage />
@@ -154,7 +151,7 @@ const App: React.FC = () => {
                   <Route
                     path="/patients/:id"
                     element={
-                      <ProtectedRoute 
+                      <ProtectedRoute
                         allowedRoles={[UserRole.ADMIN, UserRole.MEDECIN, UserRole.SECRETAIRE]}
                       >
                         <PatientDetailPage />
@@ -164,9 +161,7 @@ const App: React.FC = () => {
                   <Route
                     path="/consultations"
                     element={
-                      <ProtectedRoute 
-                        allowedRoles={[UserRole.ADMIN, UserRole.MEDECIN]}
-                      >
+                      <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.MEDECIN]}>
                         <ConsultationsPage />
                       </ProtectedRoute>
                     }
@@ -174,7 +169,7 @@ const App: React.FC = () => {
                   <Route
                     path="/consultations/:id"
                     element={
-                      <ProtectedRoute 
+                      <ProtectedRoute
                         allowedRoles={[UserRole.ADMIN, UserRole.MEDECIN, UserRole.PATIENT]}
                       >
                         <ConsultationDetailPage />
@@ -184,7 +179,7 @@ const App: React.FC = () => {
                   <Route
                     path="/appointments"
                     element={
-                      <ProtectedRoute 
+                      <ProtectedRoute
                         allowedRoles={[UserRole.ADMIN, UserRole.MEDECIN, UserRole.SECRETAIRE]}
                       >
                         <AppointmentsPage />
@@ -194,9 +189,7 @@ const App: React.FC = () => {
                   <Route
                     path="/dicom/:imageId"
                     element={
-                      <ProtectedRoute 
-                        allowedRoles={[UserRole.ADMIN, UserRole.MEDECIN]}
-                      >
+                      <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.MEDECIN]}>
                         <DicomViewerPage />
                       </ProtectedRoute>
                     }
@@ -204,24 +197,24 @@ const App: React.FC = () => {
                   <Route path="/profile" element={<ProfilePage />} />
 
                   {/* Pages d'erreur */}
-                  <Route path="/unauthorized" element={
-                    <div className="min-h-screen flex items-center justify-center">
-                      <div className="text-center">
-                        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                          Accès non autorisé
-                        </h1>
-                        <p className="text-gray-600 mb-8">
-                          Vous n'avez pas les permissions nécessaires pour accéder à cette page.
-                        </p>
-                        <button
-                          onClick={() => window.history.back()}
-                          className="btn-primary"
-                        >
-                          Retour
-                        </button>
+                  <Route
+                    path="/unauthorized"
+                    element={
+                      <div className="min-h-screen flex items-center justify-center">
+                        <div className="text-center">
+                          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                            Accès non autorisé
+                          </h1>
+                          <p className="text-gray-600 mb-8">
+                            Vous n'avez pas les permissions nécessaires pour accéder à cette page.
+                          </p>
+                          <button onClick={() => window.history.back()} className="btn-primary">
+                            Retour
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  } />
+                    }
+                  />
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </Layout>
@@ -234,4 +227,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-

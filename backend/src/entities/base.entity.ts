@@ -28,4 +28,3 @@ export abstract class BaseEntity {
   })
   deletedAt?: Date;
 }
-

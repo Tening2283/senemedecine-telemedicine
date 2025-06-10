@@ -1,10 +1,4 @@
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  JoinColumn,
-  Index,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { Patient } from './patient.entity';
 import { Consultation } from './consultation.entity';
@@ -177,7 +171,7 @@ export class DicomImage extends BaseEntity {
   @Column({ type: 'uuid', nullable: true })
   consultationId: string;
 
-  @ManyToOne(() => Consultation, (consultation) => consultation.dicomImages, {
+  @ManyToOne(() => Consultation, consultation => consultation.dicomImages, {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'consultationId' })
@@ -220,16 +214,16 @@ export class DicomImage extends BaseEntity {
 
   get fileSizeFormatted(): string {
     if (!this.fileSize) return 'Inconnu';
-    
+
     const units = ['B', 'KB', 'MB', 'GB'];
     let size = this.fileSize;
     let unitIndex = 0;
-    
+
     while (size >= 1024 && unitIndex < units.length - 1) {
       size /= 1024;
       unitIndex++;
     }
-    
+
     return `${size.toFixed(1)} ${units[unitIndex]}`;
   }
 
@@ -241,4 +235,3 @@ export class DicomImage extends BaseEntity {
     return `/instances/${this.orthancId}/preview`;
   }
 }
-

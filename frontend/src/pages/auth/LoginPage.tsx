@@ -11,10 +11,7 @@ import LoadingSpinner from '@/components/Common/LoadingSpinner';
 
 // Schéma de validation
 const loginSchema = yup.object({
-  email: yup
-    .string()
-    .email('Email invalide')
-    .required('Email requis'),
+  email: yup.string().email('Email invalide').required('Email requis'),
   password: yup
     .string()
     .min(6, 'Le mot de passe doit contenir au moins 6 caractères')
@@ -78,12 +75,8 @@ const LoginPage: React.FC = () => {
               />
             </svg>
           </div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            SeneMedecine
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Connectez-vous à votre compte
-          </p>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">SeneMedecine</h2>
+          <p className="mt-2 text-center text-sm text-gray-600">Connectez-vous à votre compte</p>
         </div>
 
         {/* Formulaire */}
@@ -101,9 +94,7 @@ const LoginPage: React.FC = () => {
                 className="form-input"
                 placeholder="votre@email.com"
               />
-              {errors.email && (
-                <p className="form-error">{errors.email.message}</p>
-              )}
+              {errors.email && <p className="form-error">{errors.email.message}</p>}
             </div>
 
             {/* Mot de passe */}
@@ -118,9 +109,7 @@ const LoginPage: React.FC = () => {
                 className="form-input"
                 placeholder="••••••••"
               />
-              {errors.password && (
-                <p className="form-error">{errors.password.message}</p>
-              )}
+              {errors.password && <p className="form-error">{errors.password.message}</p>}
             </div>
           </div>
 
@@ -155,11 +144,7 @@ const LoginPage: React.FC = () => {
               disabled={isSubmitting}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? (
-                <LoadingSpinner size="small" />
-              ) : (
-                'Se connecter'
-              )}
+              {isSubmitting ? <LoadingSpinner size="small" /> : 'Se connecter'}
             </button>
           </div>
 
@@ -170,9 +155,7 @@ const LoginPage: React.FC = () => {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-gray-50 text-gray-500">
-                  Comptes de test
-                </span>
+                <span className="px-2 bg-gray-50 text-gray-500">Comptes de test</span>
               </div>
             </div>
 
@@ -210,4 +193,3 @@ const LoginPage: React.FC = () => {
 };
 
 export default LoginPage;
-

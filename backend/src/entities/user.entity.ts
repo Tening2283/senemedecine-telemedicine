@@ -1,11 +1,4 @@
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  OneToMany,
-  JoinColumn,
-  Index,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn, Index } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { BaseEntity } from './base.entity';
 import { Hospital } from './hospital.entity';
@@ -104,25 +97,25 @@ export class User extends BaseEntity {
   @Column({ type: 'uuid', nullable: true })
   hospitalId: string;
 
-  @ManyToOne(() => Hospital, (hospital) => hospital.users, {
+  @ManyToOne(() => Hospital, hospital => hospital.users, {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'hospitalId' })
   hospital: Hospital;
 
   // Relations pour les patients (si l'utilisateur est un patient)
-  @OneToMany(() => Patient, (patient) => patient.user)
+  @OneToMany(() => Patient, patient => patient.user)
   patientProfiles: Patient[];
 
   // Relations pour les médecins
-  @OneToMany(() => Consultation, (consultation) => consultation.doctor)
+  @OneToMany(() => Consultation, consultation => consultation.doctor)
   consultationsAsDoctors: Consultation[];
 
-  @OneToMany(() => Appointment, (appointment) => appointment.doctor)
+  @OneToMany(() => Appointment, appointment => appointment.doctor)
   appointmentsAsDoctor: Appointment[];
 
   // Relations pour les secrétaires
-  @OneToMany(() => Appointment, (appointment) => appointment.createdBy)
+  @OneToMany(() => Appointment, appointment => appointment.createdBy)
   appointmentsCreated: Appointment[];
 
   // Propriétés calculées
@@ -146,4 +139,3 @@ export class User extends BaseEntity {
     return this.role === UserRole.ADMIN;
   }
 }
-

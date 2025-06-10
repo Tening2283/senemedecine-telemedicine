@@ -1,11 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { authService } from '@/services/authService';
-import { 
-  User, 
-  AuthContextType, 
-  LoginRequest,
-  LoginResponse 
-} from '@/types/auth';
+import { User, AuthContextType, LoginRequest, LoginResponse } from '@/types/auth';
 
 // Types pour le reducer
 type AuthState = {
@@ -116,12 +111,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
       const response = await authService.login(credentials);
-      
+
       // Stocker les tokens
       localStorage.setItem('senemedecine_token', response.token);
       localStorage.setItem('senemedecine_refresh_token', response.refreshToken);
       localStorage.setItem('senemedecine_user', JSON.stringify(response.user));
-      
+
       dispatch({ type: 'LOGIN_SUCCESS', payload: response });
     } catch (error) {
       dispatch({ type: 'SET_LOADING', payload: false });
@@ -135,7 +130,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('senemedecine_token');
     localStorage.removeItem('senemedecine_refresh_token');
     localStorage.removeItem('senemedecine_user');
-    
+
     dispatch({ type: 'LOGOUT' });
   };
 
@@ -148,10 +143,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       const response = await authService.refreshToken(refreshTokenValue);
-      
+
       localStorage.setItem('senemedecine_token', response.token);
       localStorage.setItem('senemedecine_refresh_token', response.refreshToken);
-      
+
       dispatch({ type: 'SET_TOKEN', payload: response.token });
     } catch (error) {
       // Échec du rafraîchissement, déconnecter l'utilisateur
@@ -163,7 +158,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Fonction de mise à jour de l'utilisateur
   const updateUser = (userData: Partial<User>): void => {
     dispatch({ type: 'UPDATE_USER', payload: userData });
-    
+
     // Mettre à jour le localStorage
     if (state.user) {
       const updatedUser = { ...state.user, ...userData };
@@ -182,11 +177,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     updateUser,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 // Hook personnalisé
@@ -197,4 +188,3 @@ export const useAuth = (): AuthContextType => {
   }
   return context;
 };
-

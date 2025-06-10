@@ -1,11 +1,4 @@
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  OneToMany,
-  JoinColumn,
-  Index,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn, Index } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { Patient } from './patient.entity';
 import { User } from './user.entity';
@@ -151,7 +144,7 @@ export class Consultation extends BaseEntity {
   @Column({ type: 'uuid' })
   patientId: string;
 
-  @ManyToOne(() => Patient, (patient) => patient.consultations, {
+  @ManyToOne(() => Patient, patient => patient.consultations, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'patientId' })
@@ -160,7 +153,7 @@ export class Consultation extends BaseEntity {
   @Column({ type: 'uuid' })
   doctorId: string;
 
-  @ManyToOne(() => User, (user) => user.consultationsAsDoctors, {
+  @ManyToOne(() => User, user => user.consultationsAsDoctors, {
     onDelete: 'RESTRICT',
   })
   @JoinColumn({ name: 'doctorId' })
@@ -169,13 +162,13 @@ export class Consultation extends BaseEntity {
   @Column({ type: 'uuid' })
   hospitalId: string;
 
-  @ManyToOne(() => Hospital, (hospital) => hospital.consultations, {
+  @ManyToOne(() => Hospital, hospital => hospital.consultations, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'hospitalId' })
   hospital: Hospital;
 
-  @OneToMany(() => DicomImage, (dicomImage) => dicomImage.consultation)
+  @OneToMany(() => DicomImage, dicomImage => dicomImage.consultation)
   dicomImages: DicomImage[];
 
   // Propriétés calculées
@@ -209,4 +202,3 @@ export class Consultation extends BaseEntity {
     return statusMap[this.status] || this.status;
   }
 }
-

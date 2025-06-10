@@ -74,4 +74,3 @@ import { orthancConfig } from './config/orthanc.config';
   providers: [],
 })
 export class AppModule {}
-

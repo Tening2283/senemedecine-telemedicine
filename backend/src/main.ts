@@ -11,17 +11,19 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   // Configuration de sécurité
-  app.use(helmet({
-    crossOriginEmbedderPolicy: false,
-    contentSecurityPolicy: {
-      directives: {
-        imgSrc: [`'self'`, 'data:', 'validator.swagger.io'],
-        scriptSrc: [`'self'`],
-        manifestSrc: [`'self'`],
-        frameSrc: [`'self'`],
+  app.use(
+    helmet({
+      crossOriginEmbedderPolicy: false,
+      contentSecurityPolicy: {
+        directives: {
+          imgSrc: [`'self'`, 'data:', 'validator.swagger.io'],
+          scriptSrc: [`'self'`],
+          manifestSrc: [`'self'`],
+          frameSrc: [`'self'`],
+        },
       },
-    },
-  }));
+    })
+  );
 
   // Compression des réponses
   app.use(compression());
@@ -47,7 +49,7 @@ async function bootstrap() {
       transformOptions: {
         enableImplicitConversion: true,
       },
-    }),
+    })
   );
 
   // Préfixe global pour l'API
@@ -56,7 +58,7 @@ async function bootstrap() {
   // Configuration Swagger
   const config = new DocumentBuilder()
     .setTitle('SeneMedecine API')
-    .setDescription('API pour l\'application de télémédecine SeneMedecine')
+    .setDescription("API pour l'application de télémédecine SeneMedecine")
     .setVersion('1.0')
     .addBearerAuth(
       {
@@ -67,7 +69,7 @@ async function bootstrap() {
         description: 'Entrez votre token JWT',
         in: 'header',
       },
-      'JWT-auth',
+      'JWT-auth'
     )
     .addTag('Auth', 'Authentification et autorisation')
     .addTag('Users', 'Gestion des utilisateurs')
@@ -104,4 +106,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-

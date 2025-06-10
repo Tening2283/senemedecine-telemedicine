@@ -1,9 +1,4 @@
-import {
-  Entity,
-  Column,
-  OneToMany,
-  Index,
-} from 'typeorm';
+import { Entity, Column, OneToMany, Index } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { User } from './user.entity';
 import { Patient } from './patient.entity';
@@ -85,16 +80,16 @@ export class Hospital extends BaseEntity {
   establishedDate: Date;
 
   // Relations
-  @OneToMany(() => User, (user) => user.hospital)
+  @OneToMany(() => User, user => user.hospital)
   users: User[];
 
-  @OneToMany(() => Patient, (patient) => patient.hospital)
+  @OneToMany(() => Patient, patient => patient.hospital)
   patients: Patient[];
 
-  @OneToMany(() => Consultation, (consultation) => consultation.hospital)
+  @OneToMany(() => Consultation, consultation => consultation.hospital)
   consultations: Consultation[];
 
-  @OneToMany(() => Appointment, (appointment) => appointment.hospital)
+  @OneToMany(() => Appointment, appointment => appointment.hospital)
   appointments: Appointment[];
 
   // Propriétés calculées
@@ -106,4 +101,3 @@ export class Hospital extends BaseEntity {
     return `${this.name} (${this.code})`;
   }
 }
-

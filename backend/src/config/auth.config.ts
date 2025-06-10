@@ -7,4 +7,3 @@ export const authConfig = registerAs('auth', () => ({
   refreshTokenExpiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '7d',
   passwordResetExpiresIn: process.env.PASSWORD_RESET_EXPIRES_IN || '1h',
 }));
-

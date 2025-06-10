@@ -1,11 +1,11 @@
 import { apiClient } from './apiClient';
-import { 
-  LoginRequest, 
-  LoginResponse, 
+import {
+  LoginRequest,
+  LoginResponse,
   User,
   ForgotPasswordRequest,
   ResetPasswordRequest,
-  ChangePasswordRequest
+  ChangePasswordRequest,
 } from '@/types/auth';
 
 class AuthService {
@@ -15,10 +15,7 @@ class AuthService {
    * Connexion utilisateur
    */
   async login(credentials: LoginRequest): Promise<LoginResponse> {
-    const response = await apiClient.post<LoginResponse>(
-      `${this.baseUrl}/login`,
-      credentials
-    );
+    const response = await apiClient.post<LoginResponse>(`${this.baseUrl}/login`, credentials);
     return response.data;
   }
 
@@ -33,10 +30,9 @@ class AuthService {
    * Rafraîchir le token
    */
   async refreshToken(refreshToken: string): Promise<LoginResponse> {
-    const response = await apiClient.post<LoginResponse>(
-      `${this.baseUrl}/refresh`,
-      { refreshToken }
-    );
+    const response = await apiClient.post<LoginResponse>(`${this.baseUrl}/refresh`, {
+      refreshToken,
+    });
     return response.data;
   }
 
@@ -141,4 +137,3 @@ class AuthService {
 }
 
 export const authService = new AuthService();
-

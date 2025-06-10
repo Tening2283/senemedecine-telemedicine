@@ -1,9 +1,4 @@
-import axios, { 
-  AxiosInstance, 
-  AxiosRequestConfig, 
-  AxiosResponse, 
-  AxiosError 
-} from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 
 // Configuration de base
@@ -52,7 +47,7 @@ const createApiClient = (): AxiosInstance => {
 
       return config;
     },
-    (error) => {
+    error => {
       console.error('❌ Erreur de requête:', error);
       return Promise.reject(error);
     }
@@ -97,10 +92,10 @@ const createApiClient = (): AxiosInstance => {
                   const refreshResponse = await client.post('/auth/refresh', {
                     refreshToken,
                   });
-                  
+
                   const { token } = refreshResponse.data;
                   localStorage.setItem('senemedecine_token', token);
-                  
+
                   // Retry la requête originale
                   if (config && config.headers) {
                     config.headers.Authorization = `Bearer ${token}`;
@@ -125,7 +120,7 @@ const createApiClient = (): AxiosInstance => {
             break;
 
           case 403:
-            toast.error('Accès refusé. Vous n\'avez pas les permissions nécessaires.');
+            toast.error("Accès refusé. Vous n'avez pas les permissions nécessaires.");
             break;
 
           case 404:
@@ -164,7 +159,7 @@ const createApiClient = (): AxiosInstance => {
             }
         }
       } else if (error.code === 'ECONNABORTED') {
-        toast.error('Délai d\'attente dépassé. Vérifiez votre connexion.');
+        toast.error("Délai d'attente dépassé. Vérifiez votre connexion.");
       } else if (error.message === 'Network Error') {
         toast.error('Erreur de réseau. Vérifiez votre connexion internet.');
       } else {
@@ -186,14 +181,20 @@ export const api = {
   get: <T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
     apiClient.get(url, config),
 
-  post: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
-    apiClient.post(url, data, config),
+  post: <T = any>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> => apiClient.post(url, data, config),
 
   put: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
     apiClient.put(url, data, config),
 
-  patch: <T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
-    apiClient.patch(url, data, config),
+  patch: <T = any>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse<T>> => apiClient.patch(url, data, config),
 
   delete: <T = any>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> =>
     apiClient.delete(url, config),
@@ -215,4 +216,3 @@ export const clearCurrentHospital = (): void => {
 };
 
 export default apiClient;
-
