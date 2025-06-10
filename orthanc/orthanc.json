@@ -1,0 +1,149 @@
+{
+  // Configuration Orthanc pour SeneMedecine
+  
+  // Nom du serveur DICOM
+  "Name": "SeneMedecine-Orthanc",
+  
+  // Configuration réseau
+  "HttpPort": 8042,
+  "DicomPort": 4242,
+  "HttpsPort": 8043,
+  
+  // Configuration de sécurité
+  "RemoteAccessAllowed": true,
+  "AuthenticationEnabled": true,
+  "RegisteredUsers": {
+    "orthanc": "orthanc",
+    "senemedecine": "senemedecine123"
+  },
+  
+  // Configuration DICOM
+  "DicomAet": "SENEMEDECINE",
+  "DicomCheckCalledAet": false,
+  "DicomCheckModalityHost": false,
+  
+  // Stockage
+  "StorageDirectory": "/var/lib/orthanc/db",
+  "IndexDirectory": "/var/lib/orthanc/db",
+  "StorageCompression": false,
+  
+  // Configuration de la base de données
+  "DatabaseServerIdentifier": "senemedecine-orthanc",
+  
+  // Limites
+  "MaximumStorageSize": 0,
+  "MaximumPatientCount": 0,
+  
+  // Configuration HTTP
+  "HttpTimeout": 60,
+  "HttpRequestTimeout": 30,
+  "HttpVerbose": false,
+  "HttpCompressionEnabled": true,
+  
+  // Configuration DICOM
+  "DicomScuTimeout": 10,
+  "DicomScpTimeout": 30,
+  "DicomServerEnabled": true,
+  "DicomAlwaysAllowEcho": true,
+  "DicomAlwaysAllowFind": false,
+  "DicomAlwaysAllowMove": false,
+  "DicomAlwaysAllowGet": false,
+  "DicomAlwaysAllowStore": false,
+  
+  // Configuration des logs
+  "LogLevel": "default",
+  "LogFile": "/var/log/orthanc.log",
+  
+  // Configuration des plugins
+  "Plugins": [
+    "/usr/share/orthanc/plugins"
+  ],
+  
+  // Configuration CORS pour l'intégration web
+  "HttpsCertificate": "",
+  "HttpsPrivateKey": "",
+  "HttpsVerifyPeers": false,
+  "HttpsCACertificates": "",
+  
+  // Configuration des modalités DICOM
+  "DicomModalities": {
+    "sample": ["STORESCP", "localhost", 2000]
+  },
+  
+  // Configuration des peers Orthanc
+  "OrthancPeers": {
+    "sample": {
+      "Url": "http://localhost:8043/",
+      "Username": "alice",
+      "Password": "orthanctest"
+    }
+  },
+  
+  // Configuration des métadonnées
+  "StableAge": 60,
+  "StrictAetComparison": false,
+  
+  // Configuration de l'interface web
+  "ServeFolders": {
+    "/app": "/usr/share/orthanc/plugins/served-folders/app"
+  },
+  
+  // Configuration des jobs
+  "ConcurrentJobs": 2,
+  "JobsHistorySize": 10,
+  
+  // Configuration de la compression
+  "StorageCompression": false,
+  
+  // Configuration des transferts
+  "TransferSyntaxAccepted": [
+    "1.2.840.10008.1.2",
+    "1.2.840.10008.1.2.1",
+    "1.2.840.10008.1.2.2",
+    "1.2.840.10008.1.2.4.50",
+    "1.2.840.10008.1.2.4.51",
+    "1.2.840.10008.1.2.4.57",
+    "1.2.840.10008.1.2.4.70"
+  ],
+  
+  // Configuration des préférences
+  "DeflateCompressionLevel": 6,
+  "DicomAssociationCloseDelay": 5,
+  "DicomTlsEnabled": false,
+  
+  // Configuration spécifique pour SeneMedecine
+  "UserMetadata": {
+    "HospitalId": 1024,
+    "PatientId": 1025,
+    "ConsultationId": 1026
+  },
+  
+  // Configuration des notifications
+  "HttpHeaders": {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Hospital-Id"
+  },
+  
+  // Configuration de l'anonymisation
+  "DeidentifyLogs": true,
+  "DeidentifyLogsDicomVersion": "2017c",
+  
+  // Configuration des études
+  "StudyRetentionTime": 0,
+  "PatientRetentionTime": 0,
+  
+  // Configuration de la synchronisation
+  "SynchronousCMove": true,
+  
+  // Configuration des warnings
+  "WarningLevel": "default",
+  
+  // Configuration de l'overwrite
+  "OverwriteInstances": false,
+  
+  // Configuration des métadonnées DICOM
+  "DefaultEncoding": "Latin1",
+  "StoreMD5ForAttachments": true
+}
+

@@ -1,0 +1,98 @@
+{
+  "name": "senemedecine",
+  "version": "1.0.0",
+  "description": "Application Web de Télémédecine basée sur Orthanc pour le Sénégal",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "./start.sh dev",
+    "start": "./start.sh prod",
+    "stop": "./start.sh stop",
+    "clean": "./start.sh clean",
+    "validate": "./scripts/validate.sh",
+    "validate:quick": "./scripts/validate.sh quick",
+    "deploy:staging": "./scripts/deploy.sh staging",
+    "deploy:prod": "./scripts/deploy.sh production",
+    "backup": "./scripts/backup.sh",
+    "restore": "./scripts/restore.sh",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "build:all": "cd backend && npm run build && cd ../frontend && npm run build",
+    "test:all": "cd backend && npm test && cd ../frontend && npm test",
+    "lint:all": "cd backend && npm run lint && cd ../frontend && npm run lint",
+    "format:all": "cd backend && npm run format && cd ../frontend && npm run format",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "db:migrate": "cd backend && npm run migration:run",
+    "db:seed": "cd backend && npm run seed:run",
+    "db:reset": "cd backend && npm run migration:revert && npm run migration:run && npm run seed:run",
+    "docs:serve": "cd docs && python3 -m http.server 8000",
+    "health:check": "curl -f http://localhost:3001/health && curl -f http://localhost:3000",
+    "logs:backend": "docker-compose logs -f backend",
+    "logs:frontend": "docker-compose logs -f frontend",
+    "logs:db": "docker-compose logs -f postgres",
+    "logs:orthanc": "docker-compose logs -f orthanc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/votre-org/senemedecine.git"
+  },
+  "keywords": [
+    "telemedicine",
+    "healthcare",
+    "dicom",
+    "orthanc",
+    "senegal",
+    "nestjs",
+    "react",
+    "typescript",
+    "postgresql"
+  ],
+  "author": "Équipe SeneMedecine",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/votre-org/senemedecine/issues"
+  },
+  "homepage": "https://github.com/votre-org/senemedecine#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
+    "prettier": "^3.0.0",
+    "typescript": "^5.1.6"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "./scripts/validate.sh quick"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
+

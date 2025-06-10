@@ -1,0 +1,61 @@
+# Fichiers à ignorer par Prettier
+
+# Dépendances
+node_modules/
+package-lock.json
+yarn.lock
+
+# Builds
+dist/
+build/
+out/
+.next/
+
+# Logs
+*.log
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Couverture de tests
+coverage/
+
+# Fichiers générés
+*.min.js
+*.min.css
+
+# Documentation générée
+docs/generated/
+
+# Données
+uploads/
+backups/
+*.sql
+*.backup
+
+# Configuration Docker
+Dockerfile*
+docker-compose*.yml
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Certificats
+*.pem
+*.key
+*.crt
+
+# Variables d'environnement
+.env*
+
+# Fichiers temporaires
+tmp/
+temp/
+
+# Fichiers spécifiques
+CHANGELOG.md
+LICENSE
+

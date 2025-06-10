@@ -1,0 +1,280 @@
+# SeneMedecine - Fichiers à ignorer
+
+# =============================================================================
+# ENVIRONNEMENT ET CONFIGURATION
+# =============================================================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# =============================================================================
+# LOGS
+# =============================================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# =============================================================================
+# DÉPENDANCES NODE.JS
+# =============================================================================
+node_modules/
+jspm_packages/
+
+# =============================================================================
+# BUILDS ET DISTRIBUTIONS
+# =============================================================================
+build/
+dist/
+out/
+.next/
+.nuxt/
+.vuepress/dist/
+
+# =============================================================================
+# CACHE ET FICHIERS TEMPORAIRES
+# =============================================================================
+.cache/
+.parcel-cache/
+.npm
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+.nyc_output
+.grunt
+bower_components
+
+# =============================================================================
+# TESTS ET COUVERTURE
+# =============================================================================
+coverage/
+*.lcov
+.nyc_output/
+junit.xml
+test-results/
+
+# =============================================================================
+# ÉDITEURS ET IDE
+# =============================================================================
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.swp
+*.swo
+*~
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# =============================================================================
+# SYSTÈME D'EXPLOITATION
+# =============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =============================================================================
+# DOCKER
+# =============================================================================
+.dockerignore
+
+# =============================================================================
+# UPLOADS ET FICHIERS UTILISATEUR
+# =============================================================================
+uploads/
+files/
+storage/
+temp/
+tmp/
+
+# =============================================================================
+# SAUVEGARDES
+# =============================================================================
+backups/
+*.backup
+*.bak
+*.sql.gz
+
+# =============================================================================
+# CERTIFICATS ET CLÉS
+# =============================================================================
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+ssl/
+certs/
+
+# =============================================================================
+# DONNÉES SENSIBLES
+# =============================================================================
+secrets/
+.secrets
+*.secret
+
+# =============================================================================
+# SPÉCIFIQUE AU PROJET
+# =============================================================================
+
+# Données de développement
+dev-data/
+test-data/
+mock-data/
+
+# Fichiers de configuration locaux
+config/local.json
+config/development.json
+config/production.json
+
+# Données Orthanc
+orthanc-data/
+dicom-files/
+
+# Données PostgreSQL
+postgres-data/
+db-data/
+
+# Données Redis
+redis-data/
+
+# =============================================================================
+# FRONTEND SPÉCIFIQUE
+# =============================================================================
+
+# React
+.eslintcache
+
+# Storybook
+storybook-static/
+
+# =============================================================================
+# BACKEND SPÉCIFIQUE
+# =============================================================================
+
+# NestJS
+dist/
+
+# TypeORM
+ormconfig.json
+
+# =============================================================================
+# MONITORING ET MÉTRIQUES
+# =============================================================================
+prometheus-data/
+grafana-data/
+
+# =============================================================================
+# DOCUMENTATION GÉNÉRÉE
+# =============================================================================
+docs/generated/
+api-docs/
+
+# =============================================================================
+# FICHIERS DE VERROUILLAGE (garder yarn.lock et package-lock.json)
+# =============================================================================
+# Décommentez si vous voulez ignorer les fichiers de verrouillage
+# package-lock.json
+# yarn.lock
+
+# =============================================================================
+# AUTRES
+# =============================================================================
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Kubernetes
+*.kubeconfig
+
+# Helm
+charts/*/charts/
+charts/*/requirements.lock
+
+# Vagrant
+.vagrant/
+
+# =============================================================================
+# FICHIERS SPÉCIFIQUES AU DÉVELOPPEMENT LOCAL
+# =============================================================================
+.local/
+.dev/
+.test/
+
+# Scripts personnels
+scripts/local/
+scripts/dev/
+
+# Configuration personnelle
+.personal/
+.user/
+

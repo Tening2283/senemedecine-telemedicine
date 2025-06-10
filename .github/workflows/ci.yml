@@ -1,0 +1,50 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '18'
+  POSTGRES_VERSION: '15'
+
+jobs:
+  # Job de validation du code
+  validate:
+    name: Code Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+        
+    - name: Lint backend
+      run: npm run lint --workspace=backend
+      
+    - name: Lint frontend
+      run: npm run lint --workspace=frontend
+      
+    - name: Check formatting
+      run: |
+        npm run format:check --workspace=backend
+        npm run format:check --workspace=frontend
+
+# Commented out sections for future implementation:
+# - Security audit (has high severity vulnerabilities in React dev dependencies)
+# - TypeScript compilation (requires missing module files)
+# - Backend tests (no test files yet)
+# - Frontend tests (no test files yet)  
+# - Docker build (depends on successful builds)
+# - Deployment jobs (depends on successful builds and tests)
+
