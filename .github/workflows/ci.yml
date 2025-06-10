@@ -59,10 +59,10 @@ jobs:
       run: npm ci
         
     - name: Run security audit backend
-      run: npm audit --workspace=backend --audit-level moderate
+      run: npm audit --workspace=backend --audit-level high
       
     - name: Run security audit frontend
-      run: npm audit --workspace=frontend --audit-level moderate
+      run: npm audit --workspace=frontend --audit-level high
 
 # Commented out sections for future implementation:
 # - TypeScript compilation (requires missing module files)
