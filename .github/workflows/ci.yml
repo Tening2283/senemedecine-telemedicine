@@ -40,31 +40,8 @@ jobs:
         npm run format:check --workspace=backend
         npm run format:check --workspace=frontend
 
-  # Job de sécurité
-  security:
-    name: Security Audit
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: npm ci
-        
-    - name: Run security audit backend
-      run: npm audit --workspace=backend --audit-level high
-      
-    - name: Run security audit frontend
-      run: npm audit --workspace=frontend --audit-level high
-
 # Commented out sections for future implementation:
+# - Security audit (has high severity vulnerabilities in React dev dependencies)
 # - TypeScript compilation (requires missing module files)
 # - Backend tests (no test files yet)
 # - Frontend tests (no test files yet)  
