@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: telemedicine_db
+    environment:
+      POSTGRES_DB: senemedecine
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: azerty
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - telemedicine_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Orthanc DICOM Server
+  orthanc:
+    image: jodogne/orthanc-plugins:1.12.1
+    container_name: telemedicine_orthanc
+    environment:
+      - ORTHANC__NAME=Telemedicine Orthanc
+      - ORTHANC__REMOTE_ACCESS_ALLOWED=true
+      - ORTHANC__HTTP_PORT=8042
+      - ORTHANC__CORS__ENABLE_CORS=true
+      - ORTHANC__CORS__ALLOWED_ORIGIN=*
+      - ORTHANC__AET=TELEMEDICINE
+      - ORTHANC__MAXIMUM_PATIENT_COUNT=1000
+      - ORTHANC__MAXIMUM_STUDY_COUNT=1000
+      - ORTHANC__MAXIMUM_INSTANCE_COUNT=10000
+    volumes:
+      - orthanc_data:/var/lib/orthanc/db
+    ports:
+      - "8042:8042"
+      - "4242:4242"  # DICOM port
+    networks:
+      - telemedicine_network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8042/system"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: telemedicine_backend
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=senemedecine
+      - DB_USER=postgres
+      - DB_PASSWORD=azerty
+      - NODE_ENV=production
+      - JWT_SECRET=1a8f5@E!xZ7#Mpl9dT$Qr3KjL0cVx&uF
+
+      - CORS_ORIGIN=http://localhost
+      - PORT=3001
+      - PGSSLMODE=disable
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - telemedicine_network
+    restart: unless-stopped
+
+  # Frontend
+  frontend:
+    build:
+      context: ./project
+      dockerfile: Dockerfile
+    container_name: telemedicine_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - orthanc
+    networks:
+      - telemedicine_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  orthanc_data:
+
+networks:
+  telemedicine_network:
+    driver: bridge 

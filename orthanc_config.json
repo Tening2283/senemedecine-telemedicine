@@ -1,0 +1,36 @@
+{
+  "Name": "Telemedicine Orthanc",
+  "HttpPort": 8042,
+  "HttpServerEnabled": true,
+  "RemoteAccessAllowed": true,
+  "CORS": {
+    "EnableCORS": true,
+    "AllowedOrigin": "*"
+  },
+  "AuthenticationEnabled": false,
+  "Aet": "TELEMEDICINE",
+  "MaximumPatientCount": 1000,
+  "MaximumStudyCount": 1000,
+  "MaximumInstanceCount": 10000,
+  "DatabaseBackend": "postgresql",
+  "PostgreSQL": {
+    "Host": "postgres",
+    "Port": 5432,
+    "Database": "orthanc",
+    "Username": "postgres",
+    "Password": "azerty"
+  },
+  "Plugins": [
+    "/usr/share/orthanc/plugins"
+  ],
+  "SslVerifyPeers": false,
+  "MaximumConcurrentJobs": 4,
+  "MaximumConcurrentTransfers": 2,
+  "MaximumStorageMode": "Recycle",
+  "MaximumPatientCount": 1000,
+  "MaximumStudyCount": 1000,
+  "MaximumInstanceCount": 10000,
+  "MaximumStorageSize": 1073741824,
+  "MaximumDatabaseSize": 1073741824,
+  "MaximumTotalSize": 2147483648
+} 
