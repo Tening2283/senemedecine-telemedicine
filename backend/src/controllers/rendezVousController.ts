@@ -73,9 +73,9 @@ export const getRendezVousById = async (req: Request, res: Response): Promise<vo
 
 export const createRendezVous = async (req: Request, res: Response): Promise<void> => {
   try {
-    const rendezVousData = req.body;
-
-    const [rendezVous] = await db('rendez_vous').insert(rendezVousData).returning('*');
+    console.log('Données reçues pour création RDV:', req.body);
+    const rdv = req.body;
+    const [rendezVous] = await db('rendez_vous').insert(rdv).returning('*');
 
     const response: ApiResponse<RendezVous> = {
       success: true,
@@ -83,12 +83,9 @@ export const createRendezVous = async (req: Request, res: Response): Promise<voi
     };
 
     res.status(201).json(response);
-  } catch (error) {
-    console.error('Erreur lors de la création du rendez-vous:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Erreur interne du serveur'
-    });
+  } catch (err) {
+    console.error('Erreur création rendez-vous:', err);
+    res.status(500).json({ error: "Erreur lors de la création du rendez-vous" });
   }
 };
 

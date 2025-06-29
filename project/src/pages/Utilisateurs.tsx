@@ -2,11 +2,25 @@ import React, { useState } from 'react';
 import { Search, Plus, Users, UserCheck, UserX, Mail, Phone, Building2 } from 'lucide-react';
 import { mockUsers, mockHopitaux } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
+import apiService from '../services/api';
 
 const Utilisateurs: React.FC = () => {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [newUser, setNewUser] = useState({
+    prenom: '',
+    nom: '',
+    email: '',
+    telephone: '',
+    role: '',
+    specialite: '',
+  });
+  const [users, setUsers] = useState(mockUsers);
+  const [formError, setFormError] = useState('');
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
+  const [editMode, setEditMode] = useState(false);
 
   // Seuls les admins peuvent voir cette page
   if (user?.role !== 'ADMIN') {
@@ -26,7 +40,7 @@ const Utilisateurs: React.FC = () => {
   }
 
   const getFilteredUsers = () => {
-    let filteredUsers = mockUsers;
+    let filteredUsers = users;
 
     if (searchTerm) {
       filteredUsers = filteredUsers.filter(user =>
@@ -75,6 +89,22 @@ const Utilisateurs: React.FC = () => {
     }
   };
 
+  const handleView = (user: any) => {
+    setSelectedUser(user);
+    setEditMode(false);
+  };
+
+  const handleEdit = (user: any) => {
+    setSelectedUser(user);
+    setEditMode(true);
+  };
+
+  const handleDeactivate = async (id: string) => {
+    if (!window.confirm("Voulez-vous vraiment désactiver cet utilisateur ?")) return;
+    await apiService.deleteUser(id);
+    setUsers(prev => prev.filter(u => u.id !== id));
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -87,8 +117,10 @@ const Utilisateurs: React.FC = () => {
           </p>
         </div>
         
-        <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
-          <Plus className="h-4 w-4" />
+        <button
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
+          onClick={() => setShowModal(true)}
+        >
           <span>Nouvel utilisateur</span>
         </button>
       </div>
@@ -256,13 +288,13 @@ const Utilisateurs: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
-                        <button className="text-blue-600 hover:text-blue-900">
+                        <button className="text-blue-600 hover:text-blue-900" onClick={() => handleView(user)}>
                           Voir
                         </button>
-                        <button className="text-green-600 hover:text-green-900">
+                        <button className="text-green-600 hover:text-green-900" onClick={() => handleEdit(user)}>
                           Modifier
                         </button>
-                        <button className="text-red-600 hover:text-red-900">
+                        <button className="text-red-600 hover:text-red-900" onClick={() => handleDeactivate(user.id)}>
                           Désactiver
                         </button>
                       </div>
@@ -286,6 +318,209 @@ const Utilisateurs: React.FC = () => {
           </div>
         )}
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">Créer un utilisateur</h2>
+            {formError && <div className="text-red-600 mb-2">{formError}</div>}
+            <form
+              onSubmit={async e => {
+                e.preventDefault();
+                setFormError('');
+                console.log('Tentative de création utilisateur', newUser);
+                try {
+                  const created = await apiService.createUser({
+                    ...newUser,
+                    role: newUser.role as "ADMIN" | "MEDECIN" | "SECRETAIRE" | "PATIENT"
+                  });
+                  setUsers(prev => [...prev, created]);
+                  setShowModal(false);
+                  setNewUser({
+                    prenom: '',
+                    nom: '',
+                    email: '',
+                    telephone: '',
+                    role: '',
+                    specialite: '',
+                  });
+                } catch (err: any) {
+                  setFormError(err.message || "Erreur lors de la création");
+                  console.error('Erreur création utilisateur:', err);
+                }
+              }}
+              className="space-y-4"
+            >
+              <input
+                className="w-full border rounded px-3 py-2"
+                placeholder="Prénom"
+                value={newUser.prenom}
+                onChange={e => setNewUser(u => ({ ...u, prenom: e.target.value }))}
+                required
+              />
+              <input
+                className="w-full border rounded px-3 py-2"
+                placeholder="Nom"
+                value={newUser.nom}
+                onChange={e => setNewUser(u => ({ ...u, nom: e.target.value }))}
+                required
+              />
+              <input
+                className="w-full border rounded px-3 py-2"
+                placeholder="Email"
+                type="email"
+                value={newUser.email}
+                onChange={e => setNewUser(u => ({ ...u, email: e.target.value }))}
+                required
+              />
+              <input
+                className="w-full border rounded px-3 py-2"
+                placeholder="Téléphone"
+                value={newUser.telephone}
+                onChange={e => setNewUser(u => ({ ...u, telephone: e.target.value }))}
+              />
+              <select
+                className="w-full border rounded px-3 py-2"
+                value={newUser.role}
+                onChange={e => setNewUser(u => ({ ...u, role: e.target.value }))}
+                required
+              >
+                <option value="">Sélectionner un rôle</option>
+                <option value="ADMIN">Administrateur</option>
+                <option value="MEDECIN">Médecin</option>
+                <option value="SECRETAIRE">Secrétaire</option>
+                <option value="PATIENT">Patient</option>
+              </select>
+              <input
+                className="w-full border rounded px-3 py-2"
+                placeholder="Spécialité"
+                value={newUser.specialite}
+                onChange={e => setNewUser(u => ({ ...u, specialite: e.target.value }))}
+              />
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  className="px-4 py-2 rounded bg-gray-200"
+                  onClick={() => setShowModal(false)}
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded bg-blue-600 text-white"
+                >
+                  Créer
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {selectedUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">
+              {editMode ? "Modifier l'utilisateur" : "Détails de l'utilisateur"}
+            </h2>
+            <form
+              onSubmit={async e => {
+                e.preventDefault();
+                if (editMode) {
+                  // Appel API pour update ici si besoin
+                  setUsers(prev =>
+                    prev.map(u => (u.id === selectedUser.id ? selectedUser : u))
+                  );
+                }
+                setSelectedUser(null);
+              }}
+              className="space-y-4"
+            >
+              <input
+                className="w-full border rounded px-3 py-2"
+                placeholder="Prénom"
+                value={selectedUser.prenom}
+                disabled={!editMode}
+                onChange={e =>
+                  setSelectedUser((u: any) => ({ ...u, prenom: e.target.value }))
+                }
+                required
+              />
+              <input
+                className="w-full border rounded px-3 py-2"
+                placeholder="Nom"
+                value={selectedUser.nom}
+                disabled={!editMode}
+                onChange={e =>
+                  setSelectedUser((u: any) => ({ ...u, nom: e.target.value }))
+                }
+                required
+              />
+              <input
+                className="w-full border rounded px-3 py-2"
+                placeholder="Email"
+                type="email"
+                value={selectedUser.email}
+                disabled={!editMode}
+                onChange={e =>
+                  setSelectedUser((u: any) => ({ ...u, email: e.target.value }))
+                }
+                required
+              />
+              <input
+                className="w-full border rounded px-3 py-2"
+                placeholder="Téléphone"
+                value={selectedUser.telephone}
+                disabled={!editMode}
+                onChange={e =>
+                  setSelectedUser((u: any) => ({ ...u, telephone: e.target.value }))
+                }
+              />
+              <select
+                className="w-full border rounded px-3 py-2"
+                value={selectedUser.role}
+                disabled={!editMode}
+                onChange={e =>
+                  setSelectedUser((u: any) => ({ ...u, role: e.target.value }))
+                }
+                required
+              >
+                <option value="">Sélectionner un rôle</option>
+                <option value="ADMIN">Administrateur</option>
+                <option value="MEDECIN">Médecin</option>
+                <option value="SECRETAIRE">Secrétaire</option>
+                <option value="PATIENT">Patient</option>
+              </select>
+              <input
+                className="w-full border rounded px-3 py-2"
+                placeholder="Spécialité"
+                value={selectedUser.specialite}
+                disabled={!editMode}
+                onChange={e =>
+                  setSelectedUser((u: any) => ({ ...u, specialite: e.target.value }))
+                }
+              />
+              <div className="flex justify-end space-x-2">
+                <button
+                  type="button"
+                  className="px-4 py-2 rounded bg-gray-200"
+                  onClick={() => setSelectedUser(null)}
+                >
+                  Fermer
+                </button>
+                {editMode && (
+                  <button
+                    type="submit"
+                    className="px-4 py-2 rounded bg-blue-600 text-white"
+                  >
+                    Enregistrer
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

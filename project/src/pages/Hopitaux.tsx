@@ -1,11 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Plus, Building2, Phone, Mail, MapPin, Users, Activity } from 'lucide-react';
 import { mockHopitaux } from '../data/mockData';
 import { useAuth } from '../contexts/AuthContext';
+import apiService from '../services/api';
 
 const Hopitaux: React.FC = () => {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newHopital, setNewHopital] = useState({
+    nom: '',
+    ville: '',
+    adresse: '',
+    telephone: '',
+    email: '',
+    actif: true,
+  });
+  const [formError, setFormError] = useState('');
+  const [hopitaux, setHopitaux] = useState<any[]>([]);
+
+  useEffect(() => {
+    apiService.getHopitaux().then(res => setHopitaux(res.data));
+  }, []);
 
   // Seuls les admins peuvent voir cette page
   if (user?.role !== 'ADMIN') {
@@ -24,7 +40,7 @@ const Hopitaux: React.FC = () => {
     );
   }
 
-  const filteredHopitaux = mockHopitaux.filter(hopital =>
+  const filteredHopitaux = hopitaux.filter(hopital =>
     hopital.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
     hopital.ville.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -41,7 +57,10 @@ const Hopitaux: React.FC = () => {
           </p>
         </div>
         
-        <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors">
+        <button
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors"
+          onClick={() => setShowCreateModal(true)}
+        >
           <Plus className="h-4 w-4" />
           <span>Nouvel hôpital</span>
         </button>
@@ -175,6 +194,74 @@ const Hopitaux: React.FC = () => {
           </div>
         )}
       </div>
+
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">Nouvel hôpital</h2>
+            {formError && <div className="text-red-600 mb-2">{formError}</div>}
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setFormError('');
+                try {
+                  // Appel API pour créer l'hôpital
+                  const created = await apiService.createHopital(newHopital);
+                  setHopitaux(prev => [...prev, created]);
+                  setShowCreateModal(false);
+                  setNewHopital({ nom: '', ville: '', adresse: '', telephone: '', email: '', actif: true });
+                } catch (err: any) {
+                  setFormError(err.message || "Erreur lors de la création");
+                }
+              }}
+            >
+              <input
+                className="w-full border rounded px-3 py-2 mb-2"
+                placeholder="Nom de l'hôpital"
+                required
+                value={newHopital.nom}
+                onChange={e => setNewHopital(f => ({ ...f, nom: e.target.value }))}
+              />
+              <input
+                className="w-full border rounded px-3 py-2 mb-2"
+                placeholder="Ville"
+                required
+                value={newHopital.ville}
+                onChange={e => setNewHopital(f => ({ ...f, ville: e.target.value }))}
+              />
+              <input
+                className="w-full border rounded px-3 py-2 mb-2"
+                placeholder="Adresse"
+                required
+                value={newHopital.adresse}
+                onChange={e => setNewHopital(f => ({ ...f, adresse: e.target.value }))}
+              />
+              <input
+                className="w-full border rounded px-3 py-2 mb-2"
+                placeholder="Téléphone"
+                required
+                value={newHopital.telephone}
+                onChange={e => setNewHopital(f => ({ ...f, telephone: e.target.value }))}
+              />
+              <input
+                className="w-full border rounded px-3 py-2 mb-2"
+                placeholder="Email"
+                required
+                value={newHopital.email}
+                onChange={e => setNewHopital(f => ({ ...f, email: e.target.value }))}
+              />
+              <div className="flex justify-end space-x-2 mt-4">
+                <button type="button" className="px-4 py-2 rounded bg-gray-200" onClick={() => setShowCreateModal(false)}>
+                  Annuler
+                </button>
+                <button type="submit" className="px-4 py-2 rounded bg-blue-600 text-white">
+                  Créer
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -83,15 +83,52 @@ router.get('/studies/:id/series', async (req, res) => {
   }
 });
 
+// Route pour lister toutes les séries DICOM
+router.get('/series', async (req, res) => {
+  try {
+    const response = await axios.get(`${process.env.ORTHANC_URL}/series`, {
+      auth: {
+        username: process.env.ORTHANC_USER || 'orthanc',
+        password: process.env.ORTHANC_PASS || 'orthanc',
+      },
+    });
+    res.json(response.data);
+  } catch (error) {
+    const err = error as Error;
+    res.status(500).json({ error: "Erreur Orthanc", details: err.message });
+  }
+});
+
+// Route pour obtenir les détails d'une série DICOM
+router.get('/series/:id', async (req, res) => {
+  try {
+    const response = await axios.get(`${process.env.ORTHANC_URL}/series/${req.params.id}`, {
+      auth: {
+        username: process.env.ORTHANC_USER || 'orthanc',
+        password: process.env.ORTHANC_PASS || 'orthanc',
+      },
+    });
+    res.json(response.data);
+  } catch (error) {
+    const err = error as Error;
+    res.status(500).json({ error: "Erreur Orthanc", details: err.message });
+  }
+});
+
 // Route pour récupérer les instances d'une série
 router.get('/series/:id/instances', async (req, res) => {
   const { id } = req.params;
   try {
-    // Proxy vers Orthanc
-    const response = await axios.get(`http://localhost:8042/series/${id}/instances`);
+    const response = await axios.get(`${process.env.ORTHANC_URL}/series/${id}/instances`, {
+      auth: {
+        username: process.env.ORTHANC_USER || 'orthanc',
+        password: process.env.ORTHANC_PASS || 'orthanc',
+      },
+    });
     res.json(response.data);
   } catch (error) {
-    res.status(404).json({ success: false, error: "Instances non trouvées" });
+    const err = error as Error;
+    res.status(404).json({ success: false, error: "Instances non trouvées", details: err.message });
   }
 });
 

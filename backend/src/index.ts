@@ -15,6 +15,10 @@ import consultationsRoutes from './routes/consultations';
 import rendezVousRoutes from './routes/rendez-vous';
 import medicamentsRoutes from './routes/medicaments';
 import orthancRoutes from './routes/orthanc';
+import usersRouter from './routes/users';
+import consultationDicomRoutes from './routes/consultation-dicom';
+
+// import patientDicomRoutes from './routes/patient-dicom';
 
 // Configuration des variables d'environnement
 dotenv.config();
@@ -64,6 +68,10 @@ app.use('/api/consultations', consultationsRoutes);
 app.use('/api/rendez-vous', rendezVousRoutes);
 app.use('/api/medicaments', medicamentsRoutes);
 app.use('/api/orthanc', orthancRoutes);
+app.use('/api/users', usersRouter);
+app.use('/api/consultation-dicom', consultationDicomRoutes);
+
+// app.use('/api/patient-dicom', patientDicomRoutes);
 
 // Route de santé
 app.get('/health', (req, res) => {

@@ -2,11 +2,11 @@
 
 ## ⚡️ Lancement ultra-rapide avec Docker Compose
 
-Vous pouvez lancer toute la stack (base de données, backend, frontend, Orthanc DICOM) en une seule commande :
+Vous pouvez lancer toute la stack (base de données, backend, frontend, Orthanc DICOM) en une seule commande :
 
 ```bash
 git clone <repository-url>
-cd "version 2"
+cd senemedecine-telemedicine
 docker-compose up --build
 ```
 
@@ -294,9 +294,6 @@ Pour toute question ou problème :
 - [ ] **Notifications** en temps réel
 - [ ] **Vidéoconférence** intégrée
 - [ ] **Mobile app** React Native
-- [ ] **IA** pour l'aide au diagnostic
-- [ ] **Intégration** avec d'autres systèmes de santé
-- [ ] **Multi-langues** (Français, Wolof, Anglais)
 - [ ] **Backup** automatique des données
 - [ ] **Audit trail** complet
 

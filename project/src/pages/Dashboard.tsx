@@ -85,27 +85,10 @@ const Dashboard: React.FC = () => {
   const upcomingAppointments = rendezVous.filter(r => r.statut !== 'ANNULE').slice(0, 5);
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Tableau de bord
-          </h1>
-          <p className="text-gray-600">
-            Bienvenue, {user?.prenom} {user?.nom}
-          </p>
-        </div>
-        
-        <div className="flex items-center space-x-2 bg-blue-50 px-4 py-2 rounded-lg">
-          <Activity className="h-5 w-5 text-blue-600" />
-          <span className="text-blue-700 font-medium">
-            {hopital?.nom || 'Tous les hôpitaux'}
-          </span>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="p-8">
+      <h1 className="text-2xl font-bold text-gray-900 mb-2">Tableau de bord</h1>
+      <p className="text-gray-600 mb-6">Bienvenue, {user?.prenom} {user?.nom}</p>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {stats.map((stat) => (
           <div key={stat.name} className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
@@ -121,90 +104,74 @@ const Dashboard: React.FC = () => {
           </div>
         ))}
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Consultations */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">
-              Consultations récentes
-            </h3>
-          </div>
-          <div className="p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-lg font-medium text-gray-900 mb-4">Consultations récentes</h2>
+          <div className="space-y-4">
             {recentConsultations.length === 0 ? (
               <p className="text-gray-500 text-center py-4">
                 Aucune consultation récente
               </p>
             ) : (
-              <div className="space-y-4">
-                {recentConsultations.map((consultation) => (
-                  <div key={consultation.id} className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-blue-100 rounded-full">
-                        <FileText className="h-4 w-4 text-blue-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">
-                          {consultation.motif}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          {new Date(consultation.date).toLocaleDateString('fr-FR')}
-                        </p>
-                      </div>
+              recentConsultations.map((consultation) => (
+                <div key={consultation.id} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-blue-100 rounded-full">
+                      <FileText className="h-4 w-4 text-blue-600" />
                     </div>
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      consultation.statut === 'TERMINEE' ? 'bg-green-100 text-green-800' :
-                      consultation.statut === 'EN_COURS' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-blue-100 text-blue-800'
-                    }`}>
-                      {consultation.statut}
-                    </span>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">
+                        {consultation.motif}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {new Date(consultation.date).toLocaleDateString('fr-FR')}
+                      </p>
+                    </div>
                   </div>
-                ))}
-              </div>
+                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                      consultation.statut === 'TERMINEE' ? 'bg-green-100 text-green-800' :
+                    consultation.statut === 'EN_COURS' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-blue-100 text-blue-800'
+                  }`}>
+                    {consultation.statut}
+                    </span>
+                </div>
+              ))
             )}
           </div>
         </div>
-
-        {/* Upcoming Appointments */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">
-              Rendez-vous à venir
-            </h3>
-          </div>
-          <div className="p-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-lg font-medium text-gray-900 mb-4">Rendez-vous à venir</h2>
+          <div className="space-y-4">
             {upcomingAppointments.length === 0 ? (
               <p className="text-gray-500 text-center py-4">
                 Aucun rendez-vous à venir
               </p>
             ) : (
-              <div className="space-y-4">
-                {upcomingAppointments.map((rdv) => (
-                  <div key={rdv.id} className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-orange-100 rounded-full">
-                        <Calendar className="h-4 w-4 text-orange-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">
-                          {rdv.motif}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          {rdv.date} à {rdv.heure}
-                        </p>
-                      </div>
+              upcomingAppointments.map((rdv) => (
+                <div key={rdv.id} className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-orange-100 rounded-full">
+                      <Calendar className="h-4 w-4 text-orange-600" />
                     </div>
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                      rdv.statut === 'CONFIRME' ? 'bg-green-100 text-green-800' :
-                      rdv.statut === 'EN_ATTENTE' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {rdv.statut}
-                    </span>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">
+                        {rdv.motif}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {rdv.date} à {rdv.heure}
+                      </p>
+                    </div>
                   </div>
-                ))}
-              </div>
+                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                      rdv.statut === 'CONFIRME' ? 'bg-green-100 text-green-800' :
+                    rdv.statut === 'EN_ATTENTE' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-red-100 text-red-800'
+                  }`}>
+                    {rdv.statut}
+                    </span>
+                </div>
+              ))
             )}
           </div>
         </div>

@@ -19,6 +19,7 @@ RUN ls -la src/index.ts || echo "index.ts not found in src/"
 # Build TypeScript with verbose output
 RUN echo "=== Starting TypeScript build ==="
 RUN npm run build
+RUN cp -r src/database/migrations dist/src/database/
 RUN echo "=== TypeScript build completed ==="
 
 # Debug: Show what was created in dist
@@ -29,8 +30,11 @@ RUN find . -name "index.js" -type f || echo "No index.js files found"
 RUN echo "=== All JS files in project ==="
 RUN find . -name "*.js" -type f || echo "No JS files found"
 
-# Remove dev dependencies to reduce image size
-RUN npm prune --production
+# Copy migrations to dist folder for Knex
+RUN echo "=== Copying migrations to dist ==="
+RUN cp -r src/database/migrations dist/src/database/ || echo "Failed to copy migrations"
+RUN echo "=== Contents of dist migrations ==="
+RUN ls -la dist/src/database/migrations/ || echo "No migrations in dist"
 
 # Debug: Check if dist/index.js still exists after pruning
 RUN echo "=== After pruning - checking dist/index.js ==="

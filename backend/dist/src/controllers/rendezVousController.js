@@ -66,20 +66,18 @@ const getRendezVousById = async (req, res) => {
 exports.getRendezVousById = getRendezVousById;
 const createRendezVous = async (req, res) => {
     try {
-        const rendezVousData = req.body;
-        const [rendezVous] = await (0, connection_1.db)('rendez_vous').insert(rendezVousData).returning('*');
+        console.log('Données reçues pour création RDV:', req.body);
+        const rdv = req.body;
+        const [rendezVous] = await (0, connection_1.db)('rendez_vous').insert(rdv).returning('*');
         const response = {
             success: true,
             data: rendezVous
         };
         res.status(201).json(response);
     }
-    catch (error) {
-        console.error('Erreur lors de la création du rendez-vous:', error);
-        res.status(500).json({
-            success: false,
-            error: 'Erreur interne du serveur'
-        });
+    catch (err) {
+        console.error('Erreur création rendez-vous:', err);
+        res.status(500).json({ error: "Erreur lors de la création du rendez-vous" });
     }
 };
 exports.createRendezVous = createRendezVous;

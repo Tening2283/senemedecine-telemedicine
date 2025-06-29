@@ -4,7 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
+const path_1 = __importDefault(require("path"));
 dotenv_1.default.config();
+const migrationsDir = path_1.default.join(__dirname, 'src', 'database', 'migrations');
+const seedsDir = path_1.default.join(__dirname, 'src', 'database', 'seeds');
 const config = {
     development: {
         client: 'postgresql',
@@ -22,10 +25,10 @@ const config = {
         },
         migrations: {
             tableName: 'knex_migrations',
-            directory: './src/database/migrations'
+            directory: migrationsDir
         },
         seeds: {
-            directory: './src/database/seeds'
+            directory: seedsDir
         }
     },
     test: {
@@ -43,10 +46,10 @@ const config = {
         },
         migrations: {
             tableName: 'knex_migrations',
-            directory: './src/database/migrations'
+            directory: migrationsDir
         },
         seeds: {
-            directory: './src/database/seeds'
+            directory: seedsDir
         }
     },
     production: {
@@ -65,10 +68,10 @@ const config = {
         },
         migrations: {
             tableName: 'knex_migrations',
-            directory: './src/database/migrations'
+            directory: migrationsDir
         },
         seeds: {
-            directory: './src/database/seeds'
+            directory: seedsDir
         }
     }
 };

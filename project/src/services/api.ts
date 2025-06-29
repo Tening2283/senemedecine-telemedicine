@@ -82,6 +82,12 @@ class ApiService {
     localStorage.removeItem('token');
   }
 
+  async deleteUser(id: string): Promise<void> {
+    await this.request(`/users/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
   // Hôpitaux
   async getHopitaux(page = 1, limit = 10): Promise<PaginatedResponse<Hopital>> {
     const response = await this.request<PaginatedResponse<Hopital>>(
@@ -89,7 +95,10 @@ class ApiService {
     );
     return response.data!;
   }
-
+  async getUsers(): Promise<User[]> {
+    const response = await this.request<User[]>('/users');
+    return response.data!;
+  }
   async getHopitalById(id: string): Promise<Hopital> {
     const response = await this.request<Hopital>(`/hopitaux/${id}`);
     return response.data!;
@@ -125,7 +134,9 @@ class ApiService {
     });
     if (hopitalId) params.append('hopital_id', hopitalId);
 
+    console.log('🌐 API - getPatients appelé avec params:', params.toString());
     const response = await this.request<PaginatedResponse<Patient>>(`/patients?${params}`);
+    console.log('🌐 API - getPatients réponse brute:', response);
     return response.data!;
   }
 
@@ -301,6 +312,69 @@ class ApiService {
     const params = hopitalId ? `?hopital_id=${hopitalId}` : '';
     const response = await this.request(`/stats/dashboard${params}`);
     return response.data;
+  }
+
+  // Utilisateurs
+  async createUser(user: Omit<User, 'id' | 'created_at' | 'updated_at'>): Promise<User> {
+    const response = await this.request<User>('/users', {
+      method: 'POST',
+      body: JSON.stringify(user),
+    });
+    return response.data!;
+  }
+
+  // Associations patient-DICOM
+  async getPatientDicomAssociations(params = {}): Promise<any[]> {
+    const queryString = new URLSearchParams(params as Record<string, string>).toString();
+    const url = queryString ? `/patient-dicom?${queryString}` : '/patient-dicom';
+    const response = await this.request<PaginatedResponse<any>>(url);
+    return response.data!.data;
+  }
+
+  async getPatientDicomAssociationsByPatient(patientId: string): Promise<any[]> {
+    const response = await this.request<PaginatedResponse<any>>('/patient-dicom/patient/' + patientId);
+    return response.data!.data;
+  }
+
+  async createPatientDicomAssociation(data: { patient_id: string; orthanc_study_id: string }): Promise<any> {
+    const response = await this.request<any>('/patient-dicom', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+    return response.data;
+  }
+
+  async deletePatientDicomAssociation(id: string): Promise<void> {
+    await this.request(`/patient-dicom/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Associations consultation-DICOM
+  async getConsultationDicomAssociations(params = {}): Promise<any[]> {
+    const queryString = new URLSearchParams(params as Record<string, string>).toString();
+    const url = queryString ? `/consultation-dicom?${queryString}` : '/consultation-dicom';
+    const response = await this.request<PaginatedResponse<any>>(url);
+    return response.data!.data;
+  }
+
+  async getConsultationDicomAssociationsByConsultation(consultationId: string): Promise<any[]> {
+    const response = await this.request<PaginatedResponse<any>>(`/consultation-dicom/consultation/${consultationId}`);
+    return response.data!.data;
+  }
+
+  async createConsultationDicomAssociation(data: { consultation_id: string; orthanc_study_id: string }): Promise<any> {
+    const response = await this.request<any>('/consultation-dicom', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+    return response.data;
+  }
+
+  async deleteConsultationDicomAssociation(id: string): Promise<void> {
+    await this.request(`/consultation-dicom/${id}`, {
+      method: 'DELETE',
+    });
   }
 }
 

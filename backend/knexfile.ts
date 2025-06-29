@@ -1,7 +1,11 @@
 import { Knex } from 'knex';
 import dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
+
+const migrationsDir = path.join(__dirname, 'src', 'database', 'migrations');
+const seedsDir = path.join(__dirname, 'src', 'database', 'seeds');
 
 const config: { [key: string]: Knex.Config } = {
   development: {
@@ -20,10 +24,10 @@ const config: { [key: string]: Knex.Config } = {
     },
     migrations: {
       tableName: 'knex_migrations',
-      directory: './src/database/migrations'
+      directory: migrationsDir
     },
     seeds: {
-      directory: './src/database/seeds'
+      directory: seedsDir
     }
   },
 
@@ -42,10 +46,10 @@ const config: { [key: string]: Knex.Config } = {
     },
     migrations: {
       tableName: 'knex_migrations',
-      directory: './src/database/migrations'
+      directory: migrationsDir
     },
     seeds: {
-      directory: './src/database/seeds'
+      directory: seedsDir
     }
   },
 
@@ -65,10 +69,10 @@ const config: { [key: string]: Knex.Config } = {
     },
     migrations: {
       tableName: 'knex_migrations',
-      directory: './src/database/migrations'
+      directory: migrationsDir
     },
     seeds: {
-      directory: './src/database/seeds'
+      directory: seedsDir
     }
   }
 };

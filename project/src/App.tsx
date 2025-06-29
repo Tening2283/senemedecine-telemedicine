@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Patients from './pages/Patients';
 import Consultations from './pages/Consultations';
 import DICOM from './pages/DICOM';
+import AssociationsDicom from './pages/AssociationsDicom';
 import Hopitaux from './pages/Hopitaux';
 import Utilisateurs from './pages/Utilisateurs';
 import Statistiques from './pages/Statistiques';
@@ -32,6 +33,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/patients" element={<Patients />} />
         <Route path="/consultations" element={<Consultations />} />
         <Route path="/dicom" element={<DICOM />} />
+        <Route path="/associations-dicom" element={<AssociationsDicom />} />
         <Route path="/rendez-vous" element={<RendezVous />} />
         <Route path="/hopitaux" element={<Hopitaux />} />
         <Route path="/utilisateurs" element={<Utilisateurs />} />

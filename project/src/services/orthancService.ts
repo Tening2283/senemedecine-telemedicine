@@ -18,6 +18,12 @@ class OrthancService {
     return response.json();
   }
 
+  async getAllSeries(): Promise<string[]> {
+    const response = await fetch('http://localhost:3001/api/orthanc/series');
+    if (!response.ok) throw new Error('Erreur lors de la récupération des séries');
+    return response.json();
+  }
+
   async getStudy(id: string): Promise<OrthancStudy> {
     const response = await fetch(`http://localhost:3001/api/orthanc/studies/${id}`);
     if (!response.ok) throw new Error('Erreur lors de la récupération de l\'étude');

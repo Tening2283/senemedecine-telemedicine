@@ -130,4 +130,12 @@ export interface AuthContextType {
   login: (email: string, password: string, hopitalId: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
+}
+
+export interface PatientDicomAssociation {
+  id: string;
+  patient_id: string;
+  orthanc_study_id: string;
+  created_by: string;
+  created_at: string;
 } 

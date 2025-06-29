@@ -10,7 +10,8 @@ import {
   Activity,
   UserPlus,
   Stethoscope,
-  BarChart3
+  BarChart3,
+  Link
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -39,7 +40,8 @@ const Sidebar: React.FC = () => {
           { path: '/patients', icon: UserPlus, label: 'Mes patients', roles: ['MEDECIN'] },
           { path: '/consultations', icon: Stethoscope, label: 'Consultations', roles: ['MEDECIN'] },
           { path: '/rendez-vous', icon: Calendar, label: 'Rendez-vous', roles: ['MEDECIN'] },
-          { path: '/dicom', icon: Activity, label: 'Imagerie DICOM', roles: ['MEDECIN'] }
+          { path: '/dicom', icon: Activity, label: 'Imagerie DICOM', roles: ['MEDECIN'] },
+          { path: '/associations-dicom', icon: Link, label: 'Associations DICOM', roles: ['MEDECIN'] }
         ];
       
       case 'SECRETAIRE':
@@ -58,7 +60,7 @@ const Sidebar: React.FC = () => {
   const menuItems = getMenuItems();
 
   return (
-    <div className="bg-white shadow-lg w-64 min-h-screen">
+    <div className="bg-white shadow-lg w-64 min-h-screen text-gray-900 border-r border-gray-200">
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center space-x-3">
           <div className="bg-blue-600 p-2 rounded-lg">

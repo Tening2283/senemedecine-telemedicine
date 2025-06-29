@@ -18,6 +18,9 @@ const consultations_1 = __importDefault(require("./routes/consultations"));
 const rendez_vous_1 = __importDefault(require("./routes/rendez-vous"));
 const medicaments_1 = __importDefault(require("./routes/medicaments"));
 const orthanc_1 = __importDefault(require("./routes/orthanc"));
+const users_1 = __importDefault(require("./routes/users"));
+const consultation_dicom_1 = __importDefault(require("./routes/consultation-dicom"));
+const ai_1 = __importDefault(require("./routes/ai"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3001;
@@ -47,6 +50,9 @@ app.use('/api/consultations', consultations_1.default);
 app.use('/api/rendez-vous', rendez_vous_1.default);
 app.use('/api/medicaments', medicaments_1.default);
 app.use('/api/orthanc', orthanc_1.default);
+app.use('/api/users', users_1.default);
+app.use('/api/consultation-dicom', consultation_dicom_1.default);
+app.use('/api/ai', ai_1.default);
 app.get('/health', (req, res) => {
     res.json({
         success: true,

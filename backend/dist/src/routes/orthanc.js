@@ -83,6 +83,36 @@ router.get('/studies/:id/series', async (req, res) => {
         res.status(500).json({ error: "Erreur Orthanc", details: err.message });
     }
 });
+router.get('/series', async (req, res) => {
+    try {
+        const response = await axios_1.default.get(`${process.env.ORTHANC_URL}/series`, {
+            auth: {
+                username: process.env.ORTHANC_USER || 'orthanc',
+                password: process.env.ORTHANC_PASS || 'orthanc',
+            },
+        });
+        res.json(response.data);
+    }
+    catch (error) {
+        const err = error;
+        res.status(500).json({ error: "Erreur Orthanc", details: err.message });
+    }
+});
+router.get('/series/:id', async (req, res) => {
+    try {
+        const response = await axios_1.default.get(`${process.env.ORTHANC_URL}/series/${req.params.id}`, {
+            auth: {
+                username: process.env.ORTHANC_USER || 'orthanc',
+                password: process.env.ORTHANC_PASS || 'orthanc',
+            },
+        });
+        res.json(response.data);
+    }
+    catch (error) {
+        const err = error;
+        res.status(500).json({ error: "Erreur Orthanc", details: err.message });
+    }
+});
 router.get('/series/:id/instances', async (req, res) => {
     const { id } = req.params;
     try {
@@ -95,7 +125,8 @@ router.get('/series/:id/instances', async (req, res) => {
         res.json(response.data);
     }
     catch (error) {
-        res.status(404).json({ success: false, error: "Instances non trouvées" });
+        const err = error;
+        res.status(404).json({ success: false, error: "Instances non trouvées", details: err.message });
     }
 });
 exports.default = router;

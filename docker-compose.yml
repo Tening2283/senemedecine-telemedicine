@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # PostgreSQL Database
   postgres:
@@ -62,11 +60,11 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=azerty
       - NODE_ENV=production
-      - JWT_SECRET=1a8f5@E!xZ7#Mpl9dT$Qr3KjL0cVx&uF
-
+      - JWT_SECRET=senemedecine_jwt_secret_key_2024
       - CORS_ORIGIN=http://localhost
       - PORT=3001
       - PGSSLMODE=disable
+      - OPENAI_API_KEY=sk-proj-...
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -78,6 +76,8 @@ services:
     networks:
       - telemedicine_network
     restart: unless-stopped
+    env_file:
+      - ./backend/.env
 
   # Frontend
   frontend:
