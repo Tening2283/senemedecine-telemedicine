@@ -5,8 +5,8 @@
 Vous pouvez lancer toute la stack (base de données, backend, frontend, Orthanc DICOM) en une seule commande :
 
 ```bash
-git clone <repository-url>
-cd senemedecine-telemedicine
+git clone https://github.com/Tening2283/senemedecine-telemedicine.git
+cd "senemedecine-telemedicine"
 docker-compose up --build
 ```
 
@@ -41,7 +41,7 @@ SeneMedecine est une plateforme de télémedecine moderne qui permet la gestion 
 ## 🏗️ Architecture
 
 ```
-SeneMedecine/
+senemedecine-telemedicine/
 ├── project/          # Frontend React/TypeScript
 │   ├── src/
 │   │   ├── components/
@@ -129,8 +129,8 @@ SeneMedecine/
 
 ### 1. Cloner le projet
 ```bash
-git clone <repository-url>
-cd SeneMedecine
+git clone https://github.com/Tening2283/senemedecine-telemedicine.git
+cd senemedecine-telemedicine
 ```
 
 ### 2. Configuration du backend

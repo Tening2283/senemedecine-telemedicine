@@ -64,7 +64,7 @@ services:
       - CORS_ORIGIN=http://localhost
       - PORT=3001
       - PGSSLMODE=disable
-      - OPENAI_API_KEY=sk-proj-...
+     
     volumes:
       - ./backend:/app
       - /app/node_modules
