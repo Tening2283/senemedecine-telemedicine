@@ -22,7 +22,7 @@ docker-compose up --build
 
 - **Frontend** : http://localhost
 - **Backend API** : http://localhost:3001/api
-- **Orthanc DICOM** : http://localhost:8042 (admin / admin)
+- **Orthanc DICOM** : http://localhost:8042 (orthanc / orthanc)
 - **PostgreSQL** : localhost:5432 (user: postgres, password: azerty, db: senemedecine)
 
 **Astuce :** La première initialisation peut prendre 1-2 minutes (installation, migrations, seeds). Attendez que tous les services soient "healthy". Pour voir les logs :
