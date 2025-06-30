@@ -12,6 +12,7 @@ import Hopitaux from './pages/Hopitaux';
 import Utilisateurs from './pages/Utilisateurs';
 import Statistiques from './pages/Statistiques';
 import RendezVous from './pages/RendezVous';
+import AIAssistant from './pages/AIAssistant';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
@@ -38,6 +39,7 @@ const AppRoutes: React.FC = () => {
         <Route path="/hopitaux" element={<Hopitaux />} />
         <Route path="/utilisateurs" element={<Utilisateurs />} />
         <Route path="/statistiques" element={<Statistiques />} />
+        <Route path="/assistant-ia" element={<AIAssistant />} />
         <Route path="/login" element={<Navigate to="/dashboard" />} />
       </Routes>
     </Layout>

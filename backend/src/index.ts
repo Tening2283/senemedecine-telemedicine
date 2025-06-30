@@ -17,6 +17,9 @@ import medicamentsRoutes from './routes/medicaments';
 import orthancRoutes from './routes/orthanc';
 import usersRouter from './routes/users';
 import consultationDicomRoutes from './routes/consultation-dicom';
+import statsRoutes from './routes/stats';
+import aiRoutes from './routes/ai';
+
 
 // import patientDicomRoutes from './routes/patient-dicom';
 
@@ -58,7 +61,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Middleware pour servir les fichiers statiques (uploads)
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads', express.static('uploads'));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -70,6 +73,9 @@ app.use('/api/medicaments', medicamentsRoutes);
 app.use('/api/orthanc', orthancRoutes);
 app.use('/api/users', usersRouter);
 app.use('/api/consultation-dicom', consultationDicomRoutes);
+app.use('/api/stats', statsRoutes);
+app.use('/api/ai', aiRoutes);
+
 
 // app.use('/api/patient-dicom', patientDicomRoutes);
 

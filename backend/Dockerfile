@@ -12,14 +12,15 @@ RUN npm ci
 COPY . .
 
 # Debug: Show what files are present
+RUN echo "=== Source files ==="
 RUN ls -la src/
 RUN echo "=== Checking if index.ts exists ==="
 RUN ls -la src/index.ts || echo "index.ts not found in src/"
 
 # Build TypeScript with verbose output
 RUN echo "=== Starting TypeScript build ==="
+RUN npx tsc --listFiles
 RUN npm run build
-RUN cp -r src/database/migrations dist/src/database/
 RUN echo "=== TypeScript build completed ==="
 
 # Debug: Show what was created in dist
@@ -27,18 +28,20 @@ RUN echo "=== Contents of dist folder ==="
 RUN ls -la dist/ || echo "dist folder not found"
 RUN echo "=== Looking for index.js ==="
 RUN find . -name "index.js" -type f || echo "No index.js files found"
-RUN echo "=== All JS files in project ==="
-RUN find . -name "*.js" -type f || echo "No JS files found"
 
 # Copy migrations to dist folder for Knex
 RUN echo "=== Copying migrations to dist ==="
-RUN cp -r src/database/migrations dist/src/database/ || echo "Failed to copy migrations"
+RUN cp -r src/database/migrations dist/database/ || echo "Failed to copy migrations"
 RUN echo "=== Contents of dist migrations ==="
-RUN ls -la dist/src/database/migrations/ || echo "No migrations in dist"
+RUN ls -la dist/database/migrations/ || echo "No migrations in dist"
 
-# Debug: Check if dist/index.js still exists after pruning
-RUN echo "=== After pruning - checking dist/index.js ==="
-RUN ls -la dist/index.js || echo "dist/index.js not found after pruning"
+# Copy knexfile to dist for migrations and runtime
+RUN echo "=== Copying knexfile to dist ==="
+RUN cp knexfile.ts dist/ || echo "Failed to copy knexfile"
+
+# Debug: Final check of dist structure
+RUN echo "=== Final dist structure ==="
+RUN find dist/ -type f -name "*.js" | head -20
 
 # Expose port
 EXPOSE 3001

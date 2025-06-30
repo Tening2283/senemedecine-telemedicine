@@ -2,10 +2,10 @@
   "name": "senemedecine-backend",
   "version": "1.0.0",
   "description": "Backend pour l'application de télémedecine SeneMedecine",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/src/index.js",
+    "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "test": "jest",
     "migrate": "knex migrate:latest",
@@ -25,7 +25,8 @@
     "knex": "^3.0.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

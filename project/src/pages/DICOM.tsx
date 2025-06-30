@@ -7,6 +7,7 @@ import { useConsultations } from '../hooks/useConsultations';
 import { useConsultationDicomAssociations, ConsultationDicomAssociation } from '../hooks/useConsultationDicomAssociations';
 import { apiService } from '../services/api';
 import DicomViewer from '../components/DicomViewer';
+import { usePatients } from '../hooks/usePatients';
 
 const DICOM: React.FC = () => {
   const { user } = useAuth();
@@ -28,6 +29,7 @@ const DICOM: React.FC = () => {
   const [selectedConsultationId, setSelectedConsultationId] = useState<string>('');
   const [associationLoading, setAssociationLoading] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { patients, loading: patientsLoading } = usePatients();
   
   // Only MEDECIN can access Orthanc
   if (user?.role !== 'MEDECIN') {
@@ -180,12 +182,6 @@ const DICOM: React.FC = () => {
           <p className="text-gray-600">
             Visualisation et association des images médicales avec les consultations
           </p>
-        </div>
-        <div className="flex space-x-2">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors" disabled>
-            <Upload className="h-4 w-4" />
-            <span>Charger DICOM</span>
-          </button>
         </div>
       </div>
 
@@ -379,11 +375,14 @@ const DICOM: React.FC = () => {
                 disabled={consultationsLoading}
               >
                 <option value="">Choisir une consultation...</option>
-                {consultations.map((consultation) => (
-                  <option key={consultation.id} value={consultation.id}>
-                    {consultation.patient_nom} {consultation.patient_prenom} - {new Date(consultation.date_consultation).toLocaleDateString('fr-FR')} - {consultation.motif}
-                  </option>
-                ))}
+                {consultations.map((consultation) => {
+                  const patient = patients.find((p: any) => p.id === consultation.patient_id);
+                  return (
+                    <option key={consultation.id} value={consultation.id}>
+                      {patient?.prenom} {patient?.nom} - {new Date(consultation.date).toLocaleDateString('fr-FR')} - {consultation.motif}
+                    </option>
+                  );
+                })}
               </select>
             </div>
 

@@ -5,6 +5,7 @@ import { usePatients } from '../hooks/usePatients';
 import { useConsultationDicomAssociations } from '../hooks/useConsultationDicomAssociations';
 import apiService from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
+import { User as UserType } from '../types';
 
 const Consultations: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -19,9 +20,7 @@ const Consultations: React.FC = () => {
   const [form, setForm] = useState({
     patient_id: '',
     motif: '',
-    symptomes: '',
     diagnostic: '',
-    traitement: '',
     date: '',
     statut: 'PROGRAMMEE',
   });
@@ -29,10 +28,15 @@ const Consultations: React.FC = () => {
   const [selectedConsultation, setSelectedConsultation] = useState<any | null>(null);
   const [editMode, setEditMode] = useState(false);
   const { user, hopital } = useAuth();
+  const [users, setUsers] = useState<UserType[]>([]);
 
   useEffect(() => {
     setConsultations(consultationsFromHook);
   }, [consultationsFromHook]);
+
+  useEffect(() => {
+    apiService.getUsers().then(setUsers).catch(() => setUsers([]));
+  }, []);
 
   const getFilteredConsultations = () => {
     let filteredConsultations = consultations;
@@ -98,22 +102,28 @@ const Consultations: React.FC = () => {
     e.preventDefault();
     try {
       if (selectedConsultation) {
-        await apiService.updateConsultation(selectedConsultation.id, form);
+        await apiService.updateConsultation(selectedConsultation.id, {
+          ...form,
+          statut: form.statut as "PROGRAMMEE" | "EN_COURS" | "TERMINEE" | "ANNULEE",
+        });
       } else {
         await apiService.createConsultation({
-          ...form,
+          patient_id: form.patient_id,
+          motif: form.motif,
+          diagnostic: form.diagnostic,
+          date: form.date,
           statut: form.statut as "PROGRAMMEE" | "EN_COURS" | "TERMINEE" | "ANNULEE",
           hopital_id: hopital!.id,
           medecin_id: user!.id,
         });
+        const result = await apiService.getConsultations();
+        setConsultations(result.data);
       }
       setShowCreateModal(false);
       setForm({
         patient_id: '',
         motif: '',
-        symptomes: '',
         diagnostic: '',
-        traitement: '',
         date: '',
         statut: 'PROGRAMMEE',
       });
@@ -192,15 +202,21 @@ const Consultations: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Patient ID
+                    Patient
                   </label>
-                  <input
-                    type="text"
+                  <select
                     value={form.patient_id}
                     onChange={(e) => setForm(f => ({ ...f, patient_id: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     required
-                  />
+                  >
+                    <option value="">Sélectionner un patient...</option>
+                    {patients.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.prenom} {p.nom}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -217,17 +233,6 @@ const Consultations: React.FC = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Symptômes
-                </label>
-                <textarea
-                  value={form.symptomes}
-                  onChange={(e) => setForm(f => ({ ...f, symptomes: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  rows={3}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
                   Diagnostic
                 </label>
                 <input
@@ -235,17 +240,6 @@ const Consultations: React.FC = () => {
                   value={form.diagnostic}
                   onChange={(e) => setForm(f => ({ ...f, diagnostic: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Traitement
-                </label>
-                <textarea
-                  value={form.traitement}
-                  onChange={(e) => setForm(f => ({ ...f, traitement: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  rows={3}
                 />
               </div>
               <div>
@@ -519,7 +513,10 @@ const Consultations: React.FC = () => {
                 if (editMode) {
                   // Appel API pour update
                   try {
-                    const updated = await apiService.updateConsultation(selectedConsultation.id, selectedConsultation);
+                    const updated = await apiService.updateConsultation(selectedConsultation.id, {
+                      ...selectedConsultation,
+                      statut: selectedConsultation.statut as "PROGRAMMEE" | "EN_COURS" | "TERMINEE" | "ANNULEE",
+                    });
                     setConsultations((prev) =>
                       prev.map((c) => (c.id === updated.id ? updated : c))
                     );
@@ -586,7 +583,7 @@ const Consultations: React.FC = () => {
                   value={selectedConsultation.statut}
                   disabled={!editMode}
                   onChange={(e) =>
-                    setSelectedConsultation((c: any) => ({ ...c, statut: e.target.value }))
+                    setSelectedConsultation((c: any) => ({ ...c, statut: e.target.value as "PROGRAMMEE" | "EN_COURS" | "TERMINEE" | "ANNULEE" }))
                   }
                 >
                   <option value="PROGRAMMEE">Programmée</option>

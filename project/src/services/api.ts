@@ -379,4 +379,23 @@ class ApiService {
 }
 
 export const apiService = new ApiService();
-export default apiService; 
+export default apiService;
+
+export const apiStats = {
+  async getConsultationsParMois() {
+    const res = await apiService.get('/stats/consultations-par-mois');
+    return res.data;
+  },
+  async getRepartitionRoles() {
+    const res = await apiService.get('/stats/repartition-roles');
+    return res.data;
+  },
+  async getPatientsParHopital() {
+    const res = await apiService.get('/stats/patients-par-hopital');
+    return res.data;
+  },
+  async getConsultationsParHopital() {
+    const res = await apiService.get('/stats/consultations-par-hopital');
+    return res.data;
+  },
+}; 

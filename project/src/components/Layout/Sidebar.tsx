@@ -30,6 +30,7 @@ const Sidebar: React.FC = () => {
           { path: '/hopitaux', icon: Building2, label: 'Hôpitaux', roles: ['ADMIN'] },
           { path: '/utilisateurs', icon: Users, label: 'Utilisateurs', roles: ['ADMIN'] },
           { path: '/statistiques', icon: BarChart3, label: 'Statistiques', roles: ['ADMIN'] },
+          { path: '/assistant-ia', icon: Link, label: 'Assistant IA', roles: ['ADMIN'] },
           { path: '/patients', icon: UserPlus, label: 'Patients', roles: ['ADMIN'] },
           { path: '/consultations', icon: Stethoscope, label: 'Consultations', roles: ['ADMIN'] }
         ];
